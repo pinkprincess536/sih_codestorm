@@ -1,0 +1,24 @@
+// Dummy login redirect
+function handleLogin() {
+  const role = document.getElementById("role").value;
+  if (role === "government") {
+    window.location.href = "government.html";
+  } else {
+    alert("University dashboard under development.");
+  }
+}
+
+// Chart.js example for Govt Dashboard
+if (document.getElementById("trendChart")) {
+  const ctx = document.getElementById("trendChart").getContext("2d");
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      datasets: [
+        { label: "Verified", data: [1200, 1500, 1700, 1600, 2000, 2200], borderColor: "#4caf50", fill: false },
+        { label: "Fake", data: [50, 80, 60, 40, 70, 90], borderColor: "#f44336", fill: false }
+      ]
+    }
+  });
+}

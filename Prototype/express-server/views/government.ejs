@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CertSure | Government Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h2>Govt Panel</h2>
+      <ul>
+        <li><a href="government.html" class="active">Dashboard</a></li>
+        <li><a href="#">Statistics</a></li>
+        <li><a href="#">Blacklist</a></li>
+        <li><a href="#">University Data</a></li>
+      </ul>
+    </aside>
+
+    <main class="dashboard-main">
+      <h1>Government Dashboard</h1>
+      <div class="stats-grid">
+        <div class="stat-card">Total Verifications: <strong>12,450</strong></div>
+        <div class="stat-card">Fake Certificates: <strong>320</strong></div>
+        <div class="stat-card">Fake % (This Month): <strong>2.5%</strong></div>
+      </div>
+
+      <canvas id="trendChart"></canvas>
+    </main>
+  </div>
+
+</body>
+</html>

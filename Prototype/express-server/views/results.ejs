@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CertSure | Verification Results</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">CertSure</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="results.html" class="active">Verify</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section class="results-container">
+    <h2>Verification Results</h2>
+    <div class="result-card">
+      <p><strong>Certificate Holder:</strong> John Doe</p>
+      <p><strong>University:</strong> XYZ University</p>
+      <p><strong>Status:</strong> <span class="verified">✅ Verified</span></p>
+      <div class="trust-score">
+        <label>Trust Score:</label>
+        <div class="progress-bar">
+          <div class="progress" style="width: 92%;">92%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <form action="/verify" method="post" enctype="multipart/form-data" class="form" id="verify-document">
+      <h2>Upload your document here !</h2>
+      <label for="upload">Upload :</label>
+      <input type="file" name="image" id="upload" placeholder="Upload your document here">
+      <button type="submit" class="form-btn">Upload</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 CertSure. All rights reserved.</p>
+  </footer>
+</body>
+</html>

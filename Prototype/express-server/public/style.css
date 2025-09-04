@@ -1,0 +1,47 @@
+/* General Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+
+body { background: #f9fbfd; color: #333; }
+
+/* Navbar */
+.navbar { display: flex; justify-content: space-between; align-items: center; background: #003366; color: #fff; padding: 15px 40px; }
+.navbar .logo { font-size: 1.5rem; font-weight: bold; }
+.navbar nav a { margin-left: 20px; color: #fff; text-decoration: none; font-weight: 500; }
+.navbar nav a.active, .navbar nav a:hover { text-decoration: underline; }
+
+/* Hero */
+.hero { text-align: center; padding: 100px 20px; background: linear-gradient(to right, #003366, #0055a5); color: #fff; }
+.hero h1 { font-size: 2.5rem; margin-bottom: 15px; }
+.hero p { font-size: 1.2rem; margin-bottom: 20px; }
+.btn-primary { background: #ffcc00; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; color: #003366; cursor: pointer; text-decoration: none; }
+.btn-primary:hover { background: #ffdb4d; }
+
+/* Features */
+.features { padding: 60px 20px; text-align: center; }
+.feature-grid { display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
+.feature-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 280px; }
+
+/* Login */
+.login-container { display: flex; justify-content: center; align-items: center; height: 80vh; }
+.login-box { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 300px; text-align: center; }
+.login-box input, .login-box select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+
+/* Results */
+.results-container { text-align: center; padding: 50px; }
+.result-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-block; text-align: left; }
+.trust-score { margin-top: 15px; }
+.progress-bar { width: 100%; background: #eee; border-radius: 5px; overflow: hidden; }
+.progress { background: #4caf50; padding: 5px; text-align: center; color: white; font-weight: bold; }
+
+/* Dashboard */
+.dashboard { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: #003366; color: white; padding: 20px; }
+.sidebar ul { list-style: none; margin-top: 20px; }
+.sidebar ul li a { display: block; padding: 10px; color: white; text-decoration: none; border-radius: 5px; }
+.sidebar ul li a.active, .sidebar ul li a:hover { background: #0055a5; }
+.dashboard-main { flex: 1; padding: 20px; }
+.stats-grid { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+.stat-card { background: #fff; padding: 20px; border-radius: 10px; flex: 1; min-width: 200px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+/* Footer */
+footer { text-align: center; padding: 15px; background: #003366; color: white; margin-top: 40px; }
