@@ -10,6 +10,7 @@
         :root {
             --jharkhand-green: #66cc99;
             --jharkhand-light-green: #d4f0d4;
+            --jharkhand-dark-green: #2e8b57;
             --jharkhand-gold: #ffd700;
             --sidebar-width: 250px;
         }
@@ -25,7 +26,7 @@
         
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--jharkhand-green);
+            background-color: var(--jharkhand-dark-green);
             color: white;
             padding: 20px 0;
             height: 100vh;
@@ -141,18 +142,18 @@
             <h4>Verification Portal</h4>
             <p class="mb-0">Government of Jharkhand</p>
         </div>
-        
-        <button class="sidebar-btn">
-            <i class="fas fa-user-check"></i> Employee Verification
-        </button>
-        
-        <button class="sidebar-btn">
+
+        <a href="comp_upload.html" class="sidebar-btn">
+            <i class="fas fa-user-check"></i> Verify Certificate
+        </a>
+
+        <a class="sidebar-btn">
             <i class="fas fa-chart-bar"></i> Reports
-        </button>
+        </a>
         
-        <button class="sidebar-btn">
+        <a class="sidebar-btn">
             <i class="fas fa-ban"></i> Blacklist
-        </button>
+        </a>
         
         
         <div style="position: absolute; bottom: 20px; width: 100%; padding: 0 20px;">
@@ -171,7 +172,7 @@
         <div class="header">
             <h3>Verification Dashboard</h3>
             <div>
-                <span class="badge bg-success">Organization Login</span>
+                <span class="badge bg-success">Company Login</span>
             </div>
         </div>
         
@@ -292,16 +293,6 @@
                         }
                     }
                 }
-            });
-            
-            
-            
-            
-            // Sidebar button click events (non-functional as requested)
-            document.querySelectorAll('.sidebar-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    alert('This feature would be implemented in a real application.');
-                });
             });
         });
     </script>
