@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Jharkhand Higher Education Department</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --jharkhand-green: #66cc99;
+            --jharkhand-light-green: #d4f0d4;
+            --jharkhand-gold: #ffd700;
+            --sidebar-width: 250px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--jharkhand-green);
+            color: white;
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            font-size: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .sidebar-btn:hover, .sidebar-btn.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-btn i {
+            margin-right: 10px;
+            width: 25px;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+        }
+        
+        .stats-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--jharkhand-green);
+        }
+        
+        .stats-title {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 15px 30px;
+            margin: -30px -30px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .progress {
+            height: 8px;
+            margin-top: 10px;
+        }
+        
+        .forgery-alert {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .recent-activity {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .activity-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .blacklist-item {
+            padding: 10px 15px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            margin-bottom: 10px;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h4>Admin Portal</h4>
+            <p class="mb-0">Higher Education Department</p>
+        </div>
+        
+        <button class="sidebar-btn active">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </button>
+        
+        <button class="sidebar-btn">
+            <i class="fas fa-chart-bar"></i> Access Requests
+        </button>
+        
+        <button class="sidebar-btn">
+            <i class="fas fa-university"></i> Institutions
+        </button>
+        
+        <button class="sidebar-btn">
+            <i class="fas fa-ban"></i> Blacklist
+        </button>
+        
+        <button class="sidebar-btn">
+            <i class="fas fa-file-alt"></i> Reports
+        </button>
+        
+        <button class="sidebar-btn">
+            <i class="fas fa-cog"></i> Settings
+        </button>
+        
+        <div style="position: absolute; bottom: 20px; width: 100%; padding: 0 20px;">
+            <button class="sidebar-btn">
+                <i class="fas fa-user-shield"></i> Admin Profile
+            </button>
+            
+            <button class="sidebar-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h3>Admin Dashboard</h3>
+            <div>
+                <span class="badge bg-primary">Higher Education Department</span>
+            </div>
+        </div>
+        
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> You have <strong>14</strong> pending verification requests and <strong>8</strong> new forgery alerts today.
+        </div>
+        
+        <div class="row">
+            <!-- Stats Cards -->
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-title">Total Verifications</div>
+                    <div class="stats-number">12,847</div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-title">Pending Reviews</div>
+                    <div class="stats-number">143</div>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 35%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-title">Forgery Cases</div>
+                    <div class="stats-number">278</div>
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 18%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-title">Success Rate</div>
+                    <div class="stats-number">97.8%</div>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 97.8%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <h5>Verification Overview</h5>
+                    <div class="chart-container">
+                        <canvas id="verificationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <h5>Forgery Type Analysis</h5>
+                    <div class="chart-container">
+                        <canvas id="forgeryTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="stats-card">
+                    <h5>Monthly Forgery Trends</h5>
+                    <div class="chart-container">
+                        <canvas id="monthlyTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h5>Recent Blacklist</h5>
+                    <div class="blacklist-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>Name of Offender</strong>
+                            <span class="badge bg-danger">Seal Forgery</span>
+                        </div>
+                        <div class="text-muted">ID: BL-2023-087 | Added: 2 days ago</div>
+                    </div>
+                    
+                    <div class="blacklist-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>Name of Offender</strong>
+                            <span class="badge bg-warning text-dark">Impersonation</span>
+                        </div>
+                        <div class="text-muted">ID: BL-2023-086 | Added: 4 days ago</div>
+                    </div>
+                    
+                    <div class="blacklist-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>Name of Offender</strong>
+                            <span class="badge bg-info">Text Alteration</span>
+                        </div>
+                        <div class="text-muted">ID: BL-2023-085 | Added: 1 week ago</div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-danger btn-sm">View Full Blacklist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="recent-activity">
+                    <h5>Recent Verification Activity</h5>
+                    
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="fas fa-shield-alt text-success"></i> 
+                                <strong>Certificate verified:</strong> Priya Sharma (Roll No: 2020UCS1234) - Ranchi University
+                            </div>
+                            <span class="text-muted">30 minutes ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="fas fa-exclamation-triangle text-danger"></i> 
+                                <strong>Forgery detected:</strong> Seal mismatch on certificate from (name of the offernder)
+                            </div>
+                            <span class="text-muted">2 hours ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="fas fa-ban text-warning"></i> 
+                                <strong>Entity blacklisted:</strong> John Smith for impersonation attempts
+                            </div>
+                            <span class="text-muted">4 days ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="fas fa-file-upload text-info"></i> 
+                                <strong>Batch upload:</strong> 245 new certificates from Jamshedpur Institute
+                            </div>
+                            <span class="text-muted">5 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verification Overview Chart
+            const verificationCtx = document.getElementById('verificationChart').getContext('2d');
+            const verificationChart = new Chart(verificationCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Verified', 'Forgery Attempts', 'Pending'],
+                    datasets: [{
+                        data: [85, 8, 7],
+                        backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Forgery Type Analysis Chart
+            const forgeryTypeCtx = document.getElementById('forgeryTypeChart').getContext('2d');
+            const forgeryTypeChart = new Chart(forgeryTypeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Seal Forgery', 'Signature Forgery', 'Text Alteration', 'Impersonation', 'Structural'],
+                    datasets: [{
+                        label: 'Number of Cases',
+                        data: [42, 28, 35, 20, 15],
+                        backgroundColor: '#dc3545',
+                        borderColor: '#dc3545',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Monthly Trend Chart
+            const monthlyTrendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+            const monthlyTrendChart = new Chart(monthlyTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Verified Certificates',
+                        data: [980, 1040, 1120, 1250, 1180, 1320, 1450, 1380, 1520, 1480, 1620, 1750],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }, {
+                        label: 'Forgery Attempts',
+                        data: [25, 18, 22, 30, 28, 35, 42, 38, 45, 40, 38, 32],
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Verification Trends'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Sidebar button click events
+            document.querySelectorAll('.sidebar-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if(this.textContent.includes('Logout')) {
+                        alert('Logout functionality would be implemented in a real application.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

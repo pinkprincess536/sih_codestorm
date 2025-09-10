@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Admin Login - Certificate Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --jharkhand-green: #66cc99;
+            --jharkhand-light-green: #d4f0d4;
+            --jharkhand-gold: #ffd700;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: var(--jharkhand-green);
+            color: white;
+            padding: 15px 0;
+            border-bottom: 5px solid var(--jharkhand-gold);
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-login {
+            background-color: var(--jharkhand-green);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-login:hover {
+            background-color: #004d00;
+            color: white;
+        }
+        
+        .footer {
+            background-color: var(--jharkhand-green);
+            color: white;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+        
+        .form-label {
+            font-weight: 500;
+        }
+        
+        .admin-notice {
+            background-color: var(--jharkhand-light-green);
+            border-left: 4px solid var(--jharkhand-green);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 text-center">
+                    <h4>University Certificate Verification Portal</h4>
+                    <h5>Secure Access for University Administrators</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="container">
+        <div class="login-container">
+            <h3 class="text-center mb-4">University Admin Login</h3>
+            
+            <div class="admin-notice">
+                <strong>Authorized Access Only:</strong> This portal is strictly for university administration staff for certificate upload and verification purposes.
+            </div>
+            
+            <form action="/university-admin" method="get">
+                <div class="mb-3">
+                    <label for="universityId" class="form-label">University ID</label>
+                    <input type="text" class="form-control" id="universityId" placeholder="Enter your university ID" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
+                <button type="submit" class="btn btn-login btn-lg">Login</button>                
+                <!-- <button type="submit" onClick="window.location.href='uni_admin.html'" class="btn btn-login btn-lg">Login</button> -->
+            </form>
+            
+            <hr class="my-4">
+            
+            <div class="text-center">
+                <p><a href="index.html">&larr; Back to Home</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>University Certificate Verification</h5>
+                    <p>For Authorized University Admins</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <address class="mb-0">
+                        Email: university-support@verification.org<br>
+                        Helpline: 1800-123-456
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
