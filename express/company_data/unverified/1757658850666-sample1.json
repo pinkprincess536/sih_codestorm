@@ -1,0 +1,5 @@
+{
+  "fileName": "sample1.png",
+  "status": "error",
+  "error": "FastAPI server connection failed"
+}

@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+google-generativeai
+Pillow
+python-dotenv
+python-multipart
+psycopg2-binary

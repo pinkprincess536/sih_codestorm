@@ -57,6 +57,34 @@
       border-left: 4px solid var(--jharkhand-gold);
     }
 
+      /* === MODIFIED STYLES START HERE === */
+    .sidebar button {
+      /* Reset button defaults */
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      font-size: inherit;
+
+      /* Apply original link styles */
+      display: block;
+      color: white;
+      padding: 12px 20px;
+      text-decoration: none;
+      font-weight: 500;
+      border-left: 4px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .sidebar button:hover,
+    .sidebar button.active {
+      background: var(--jharkhand-green);
+      border-left: 4px solid var(--jharkhand-gold);
+    }
+    /* === MODIFIED STYLES END HERE === */
+
     .main-content {
       padding: 25px;
       flex: 1;
@@ -100,12 +128,24 @@
 
   <div class="content-wrapper">
     <div class="col-md-3 col-lg-2 sidebar">
-      <a href="uni_admin.html"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
-      <a href="uni_upload.html" class="active"><i class="fas fa-upload me-2"></i> Upload Records</a>
-      <a href="uni_database.html"><i class="fas fa-list me-2"></i> View Database</a>
-      <a href="#"><i class="fas fa-exclamation-circle me-2"></i> Grievances</a>
-      <a href="#"><i class="fas fa-cog me-2"></i> Settings</a>
-    </div>
+        <form method="get">
+          <button type="submit"  formaction="/university-admin">
+            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+          </button>
+          <button type="submit"  formaction="/university-upload" class="active">
+            <i class="fas fa-upload me-2"></i> Upload Records
+          </button>
+          <button type="submit"  formaction="/university-database">
+            <i class="fas fa-list me-2"></i> View Database
+          </button>
+          <button type="submit"  formaction="#">
+            <i class="fas fa-exclamation-circle me-2"></i> Grievances
+          </button>
+          <button type="submit"  formaction="#">
+            <i class="fas fa-cog me-2"></i> Settings
+          </button>
+        </form>
+      </div>
 
     <div class="col-md-9 col-lg-10 main-content">
     <h3 class="mb-4"><i class="fas fa-upload me-2"></i>Upload Student Records</h3>

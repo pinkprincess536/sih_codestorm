@@ -113,7 +113,6 @@
 </head>
 <body>
 
-  <!-- Header -->
   <div class="header">
     <div class="container-fluid d-flex justify-content-between align-items-center">
       <h4 class="mb-0">CertSure - Recruiter | Upload Certificates</h4>
@@ -121,9 +120,7 @@
     </div>
   </div>
 
-  <!-- Sidebar + Main Content -->
   <div class="content-wrapper">
-    <!-- Sidebar -->
     <div class="col-md-3 col-lg-2 sidebar">
       <form method="get">
         <button class="sidebar-btn" type="submit" formaction="/company-dashboard">
@@ -148,28 +145,31 @@
       </form>
     </div>
 
-    <!-- Main -->
     <div class="col-md-9 col-lg-10 main-content">
       <h3 class="mb-4"><i class="fas fa-upload me-2"></i>Upload Certificates</h3>
 
-      <div class="upload-box" id="uploadBox">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <h5 class="mt-3">Upload Certificates</h5>
-        <p>Drag and drop candidate certificates here, or click to browse</p>
-        <input type="file" id="fileInput" multiple hidden>
-        <button type="submit" class="btn btn-success" id="chooseFileBtn">Choose Files</button>
-        <p class="mt-2 text-muted">Supported formats: PDF, JPG, PNG | Max size: 10MB per file</p>
-      </div>
+      <form id="uploadForm" action="/company-upload" method="POST" enctype="multipart/form-data">
+        <div class="upload-box" id="uploadBox">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <h5 class="mt-3">Upload Certificates</h5>
+          <p>Drag and drop candidate certificates here, or click to browse</p>
+          <input type="file" id="fileInput" name="certificates" multiple hidden accept="application/pdf, image/jpeg, image/png">
+          <button type="button" class="btn btn-success" id="chooseFileBtn">Choose Files</button>
+          <p class="mt-2 text-muted">Supported formats: PDF, JPG, PNG | Max size: 10MB per file</p>
+        </div>
 
-      <!-- Uploaded files list -->
-      <div class="mt-4">
-        <h5>Selected Files:</h5>
-        <ul id="fileList" class="list-group"></ul>
-      </div>
+        <div class="mt-4">
+          <h5>Selected Files:</h5>
+          <ul id="fileList" class="list-group"></ul>
+          
+          <button type="submit" class="btn btn-primary mt-3" id="uploadToServerBtn" style="display: none;">
+            <i class="fas fa-server me-2"></i>Upload to Server
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="footer">
   </div>
 
@@ -178,6 +178,7 @@
     const fileInput = document.getElementById('fileInput');
     const chooseFileBtn = document.getElementById('chooseFileBtn');
     const fileList = document.getElementById('fileList');
+    const uploadToServerBtn = document.getElementById('uploadToServerBtn'); 
 
     chooseFileBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', handleFiles);
@@ -194,12 +195,19 @@
     uploadBox.addEventListener('drop', (e) => {
       e.preventDefault();
       uploadBox.classList.remove('dragover');
+      fileInput.files = e.dataTransfer.files;
       handleFiles({ target: { files: e.dataTransfer.files } });
     });
 
     function handleFiles(event) {
       const files = event.target.files;
       fileList.innerHTML = '';
+
+      if (files.length > 0) {
+        uploadToServerBtn.style.display = 'block';
+      } else {
+        uploadToServerBtn.style.display = 'none';
+      }
 
       Array.from(files).forEach(file => {
         const li = document.createElement('li');
@@ -214,7 +222,7 @@
 
         fileList.appendChild(li);
 
-        console.log("Uploading:", file.name);
+        console.log("Selected for upload:", file.name);
       });
     }
   </script>

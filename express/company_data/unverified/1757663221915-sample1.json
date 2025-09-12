@@ -1,0 +1,15 @@
+{
+  "fileName": "sample1.png",
+  "status": "success",
+  "data": {
+    "extracted_data": {
+      "Name": "Rohan Shelke",
+      "Course": "Course CE",
+      "Grade": "B",
+      "Roll": "11",
+      "Certificate_ID": "5401"
+    },
+    "verification_status": "❌ Not Found / Tampered",
+    "certificate_hash": "dae3016c62665b804e3d5abf1f8b66031bf71aacb0e6a51e0543318f76c10f09"
+  }
+}

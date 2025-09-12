@@ -1,0 +1,15 @@
+{
+  "fileName": "2.png",
+  "status": "success",
+  "data": {
+    "extracted_data": {
+      "Name": "Aarav Sharma",
+      "Course": "B.tech in Information Technology",
+      "Grade": "A",
+      "Roll": "50423",
+      "Certificate_ID": "24250216"
+    },
+    "verification_status": "❌ Not Found / Tampered",
+    "certificate_hash": "43fdd2836ceb83ef5d924345e405b2baa60cf134e778243cc52936ec300e959a"
+  }
+}
