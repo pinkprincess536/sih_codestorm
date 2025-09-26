@@ -80,7 +80,7 @@ async def _call_llm_for_extraction(image_bytes: bytes) -> dict:
     - "Certificate_ID"
     """
 
-    model = genai.GenerativeModel("gemini-1.5-flash-latest")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     response = await model.generate_content_async([prompt, img], stream=False)
 
     raw_text = response.text

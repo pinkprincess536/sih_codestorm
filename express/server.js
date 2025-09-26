@@ -96,6 +96,76 @@ app.get('/company-upload', (req, res) => {
  * @route   POST /company-upload
  * @desc    Receives certificate images, forwards them for verification, and stores them.
  */
+// app.post('/company-upload', uploadImages.array('certificates'), async (req, res) => {
+//     if (!req.files || req.files.length === 0) {
+//         return res.status(400).json({ error: 'No files were uploaded.' });
+//     }
+
+//     const verificationPromises = req.files.map(file => {
+//         console.log(`Forwarding file to FastAPI: ${file.originalname}`);
+
+//         const formData = new FormData();
+//         formData.append('file', file.buffer, {
+//             filename: file.originalname,
+//             contentType: file.mimetype,
+//         });
+
+//         return axios.post(FASTAPI_SERVER_URL, formData, {
+//             headers: { ...formData.getHeaders() }
+//         }).then(response => {
+//             const result = {
+//                 fileName: file.originalname,
+//                 status: 'success',
+//                 data: response.data
+//             };
+
+//             // --- Logic to save verified/unverified files ---
+//             const isAuthentic = response.data.verification_status.includes('Authentic');
+//             const saveDir = isAuthentic ? verifiedDir : unverifiedDir;
+//             const timestamp = Date.now();
+//             const uniqueFileName = `${timestamp}-${file.originalname}`;
+//             const imagePath = path.join(saveDir, uniqueFileName);
+//             const jsonPath = path.join(saveDir, `${timestamp}-${path.parse(file.originalname).name}.json`);
+
+//             fs.writeFileSync(imagePath, file.buffer); // Save the image
+//             fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2)); // Save the details JSON
+//             console.log(`Saved ${file.originalname} to ${saveDir}`);
+
+//             return result;
+//         }).catch(error => {
+//             const result = {
+//                 fileName: file.originalname,
+//                 status: 'error',
+//                 error: error.response ? error.response.data.detail || 'Unknown error' : 'FastAPI server connection failed'
+//             };
+
+//             // --- Logic to save errored/unverified files ---
+//             const timestamp = Date.now();
+//             const uniqueFileName = `${timestamp}-${file.originalname}`;
+//             const imagePath = path.join(unverifiedDir, uniqueFileName);
+//             const jsonPath = path.join(unverifiedDir, `${timestamp}-${path.parse(file.originalname).name}.json`);
+            
+//             fs.writeFileSync(imagePath, file.buffer); // Save the image
+//             fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2)); // Save the details JSON
+//             console.log(`Saved ${file.originalname} to ${unverifiedDir}`);
+
+//             return result;
+//         });
+//     });
+
+//     try {
+//         const results = await Promise.all(verificationPromises);
+//         console.log("All files processed. Sending consolidated results back to the client.");
+//         res.status(200).json({ results });
+//     } catch (error) {
+//         console.error("An unexpected error occurred while processing uploads:", error);
+//         res.status(500).json({ error: 'An unexpected server error occurred.' });
+//     }
+// });
+
+
+// --- Remaining Existing Routes (Unchanged) ---
+
 app.post('/company-upload', uploadImages.array('certificates'), async (req, res) => {
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: 'No files were uploaded.' });
@@ -119,7 +189,9 @@ app.post('/company-upload', uploadImages.array('certificates'), async (req, res)
                 data: response.data
             };
 
-            // --- Logic to save verified/unverified files ---
+            
+
+            // --- Save verified/unverified ---
             const isAuthentic = response.data.verification_status.includes('Authentic');
             const saveDir = isAuthentic ? verifiedDir : unverifiedDir;
             const timestamp = Date.now();
@@ -127,8 +199,8 @@ app.post('/company-upload', uploadImages.array('certificates'), async (req, res)
             const imagePath = path.join(saveDir, uniqueFileName);
             const jsonPath = path.join(saveDir, `${timestamp}-${path.parse(file.originalname).name}.json`);
 
-            fs.writeFileSync(imagePath, file.buffer); // Save the image
-            fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2)); // Save the details JSON
+            fs.writeFileSync(imagePath, file.buffer);
+            fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2));
             console.log(`Saved ${file.originalname} to ${saveDir}`);
 
             return result;
@@ -139,14 +211,13 @@ app.post('/company-upload', uploadImages.array('certificates'), async (req, res)
                 error: error.response ? error.response.data.detail || 'Unknown error' : 'FastAPI server connection failed'
             };
 
-            // --- Logic to save errored/unverified files ---
             const timestamp = Date.now();
             const uniqueFileName = `${timestamp}-${file.originalname}`;
             const imagePath = path.join(unverifiedDir, uniqueFileName);
             const jsonPath = path.join(unverifiedDir, `${timestamp}-${path.parse(file.originalname).name}.json`);
             
-            fs.writeFileSync(imagePath, file.buffer); // Save the image
-            fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2)); // Save the details JSON
+            fs.writeFileSync(imagePath, file.buffer);
+            fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2));
             console.log(`Saved ${file.originalname} to ${unverifiedDir}`);
 
             return result;
@@ -155,16 +226,18 @@ app.post('/company-upload', uploadImages.array('certificates'), async (req, res)
 
     try {
         const results = await Promise.all(verificationPromises);
-        console.log("All files processed. Sending consolidated results back to the client.");
-        res.status(200).json({ results });
+
+        // ✅ Print raw JSON on server
+        console.log("Verification Results:", JSON.stringify(results, null, 2));
+
+        // ✅ Render verify_results.ejs
+        res.render("verify_results.ejs", { results });
     } catch (error) {
         console.error("An unexpected error occurred while processing uploads:", error);
         res.status(500).json({ error: 'An unexpected server error occurred.' });
     }
 });
 
-
-// --- Remaining Existing Routes (Unchanged) ---
 
 app.get('/government-login', (req, res) => {
     res.render("govt_login.ejs");
@@ -246,6 +319,36 @@ app.post('/university-upload', upload.array('excelFiles'), (req, res) => {
 app.get('/university-login', (req, res) => {
     res.render("uni_login.ejs");
 });
+
+app.get('/verify-results', (req, res) => {
+    try {
+        const results = [];
+
+        // Read both verified and unverified folders
+        [verifiedDir, unverifiedDir].forEach(folder => {
+            if (fs.existsSync(folder)) {
+                const files = fs.readdirSync(folder);
+                files.forEach(file => {
+                    if (file.endsWith('.json')) {
+                        const data = JSON.parse(fs.readFileSync(path.join(folder, file), 'utf-8'));
+                        results.push({
+                            fileName: data.fileName,
+                            candidate_name: data.data?.recipient_name || 'N/A',
+                            verification_status: data.data?.verification_status || 'Unknown',
+                            uploaded_at: fs.statSync(path.join(folder, file)).mtime // use file modified time
+                        });
+                    }
+                });
+            }
+        });
+        const sortedResults = results.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
+        res.render("verify_results.ejs", { results: sortedResults })
+    } catch (err) {
+        console.error("Error fetching verification results:", err);
+        res.status(500).send("Error fetching verification results.");
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
