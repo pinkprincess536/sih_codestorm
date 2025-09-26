@@ -4,7 +4,6 @@ import path from "path";
 import multer from 'multer';
 import xlsx from 'xlsx';
 import fs from 'fs';
-// --- New imports for forwarding files ---
 import axios from 'axios';
 import FormData from 'form-data';
 import { exec } from 'child_process';
@@ -23,11 +22,6 @@ const port = 3000;
 // --- Configuration for FastAPI Proxy ---
 const FASTAPI_SERVER_URL = 'http://127.0.0.1:8000/extract-details/';
 
-
-// This comment is to satisfy the linter.
-// app.set("view engine", "ejs");
-// app.set("views", path.join(__dirname, "views"));
-
 // --- Folder setup for storing company uploads ---
 const companyDataDir = 'company_data';
 const verifiedDir = config.verifiedDir;
@@ -36,7 +30,6 @@ const unverifiedDir = config.unverifiedDir;
 // Create directories if they don't exist
 if (!fs.existsSync(verifiedDir)) fs.mkdirSync(verifiedDir, { recursive: true });
 if (!fs.existsSync(unverifiedDir)) fs.mkdirSync(unverifiedDir, { recursive: true });
-
 
 // --- Existing Multer configuration for University Excel uploads ---
 const uploadDir = config.uploadsDir;
@@ -66,116 +59,65 @@ const uploadImages = multer({
 // --- Existing Routes (Unchanged) ---
 
 app.get('/', (req, res) => {
-    res.render("index.ejs");
+    try {
+        res.render("index.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/company-dashboard', (req, res) => {
-    res.render("comp_dashboard.ejs");
+    try {
+        res.render("company-routes/comp_dashboard.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/company-login', (req, res) => {
-    res.render("comp_login.ejs");
+    try {
+        res.render("company-routes/comp_login.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/company-enrollment', (req, res) => {
-    res.render("comp_enrollment.ejs");
+    try {
+        res.render("company-routes/comp_enrollment.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
-// --- Modified Section for Company Upload ---
-
-/**
- * @route   GET /company-upload
- * @desc    Renders the file upload page for the company.
- */
 app.get('/company-upload', (req, res) => {
-    res.render("comp_upload.ejs");
+    try {
+        res.render("company-routes/comp_upload.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
-
-
-/**
- * @route   POST /company-upload
- * @desc    Receives certificate images, forwards them for verification, and stores them.
- */
-// app.post('/company-upload', uploadImages.array('certificates'), async (req, res) => {
-//     if (!req.files || req.files.length === 0) {
-//         return res.status(400).json({ error: 'No files were uploaded.' });
-//     }
-
-//     const verificationPromises = req.files.map(file => {
-//         console.log(`Forwarding file to FastAPI: ${file.originalname}`);
-
-//         const formData = new FormData();
-//         formData.append('file', file.buffer, {
-//             filename: file.originalname,
-//             contentType: file.mimetype,
-//         });
-
-//         return axios.post(FASTAPI_SERVER_URL, formData, {
-//             headers: { ...formData.getHeaders() }
-//         }).then(response => {
-//             const result = {
-//                 fileName: file.originalname,
-//                 status: 'success',
-//                 data: response.data
-//             };
-
-//             // --- Logic to save verified/unverified files ---
-//             const isAuthentic = response.data.verification_status.includes('Authentic');
-//             const saveDir = isAuthentic ? verifiedDir : unverifiedDir;
-//             const timestamp = Date.now();
-//             const uniqueFileName = `${timestamp}-${file.originalname}`;
-//             const imagePath = path.join(saveDir, uniqueFileName);
-//             const jsonPath = path.join(saveDir, `${timestamp}-${path.parse(file.originalname).name}.json`);
-
-//             fs.writeFileSync(imagePath, file.buffer); // Save the image
-//             fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2)); // Save the details JSON
-//             console.log(`Saved ${file.originalname} to ${saveDir}`);
-
-//             return result;
-//         }).catch(error => {
-//             const result = {
-//                 fileName: file.originalname,
-//                 status: 'error',
-//                 error: error.response ? error.response.data.detail || 'Unknown error' : 'FastAPI server connection failed'
-//             };
-
-//             // --- Logic to save errored/unverified files ---
-//             const timestamp = Date.now();
-//             const uniqueFileName = `${timestamp}-${file.originalname}`;
-//             const imagePath = path.join(unverifiedDir, uniqueFileName);
-//             const jsonPath = path.join(unverifiedDir, `${timestamp}-${path.parse(file.originalname).name}.json`);
-            
-//             fs.writeFileSync(imagePath, file.buffer); // Save the image
-//             fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2)); // Save the details JSON
-//             console.log(`Saved ${file.originalname} to ${unverifiedDir}`);
-
-//             return result;
-//         });
-//     });
-
-//     try {
-//         const results = await Promise.all(verificationPromises);
-//         console.log("All files processed. Sending consolidated results back to the client.");
-//         res.status(200).json({ results });
-//     } catch (error) {
-//         console.error("An unexpected error occurred while processing uploads:", error);
-//         res.status(500).json({ error: 'An unexpected server error occurred.' });
-//     }
-// });
-
-
-// --- Remaining Existing Routes (Unchanged) ---
 
 app.post('/company-upload', uploadImages.array('certificates'), async (req, res) => {
     if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ error: 'No files were uploaded.' });
+        return res.status(400).json({ error: 'No files were uploaded.' });  //checking if any file is sent in the request or not 
     }
 
     const verificationPromises = req.files.map(file => {
-        console.log(`Forwarding file to FastAPI: ${file.originalname}`);
+        console.log(`Forwarding file to FastAPI: ${file.originalname}`);    //Step-1 : sending every file ONE-BY-ONE to the fastapi server
 
         const formData = new FormData();
-        formData.append('file', file.buffer, {
+        formData.append('file', file.buffer, {  //Step-2 : creating a sample HTML form to send the data (this is how data is sent bw servers as forms)
             filename: file.originalname,
             contentType: file.mimetype,
         });
@@ -227,11 +169,11 @@ app.post('/company-upload', uploadImages.array('certificates'), async (req, res)
     try {
         const results = await Promise.all(verificationPromises);
 
-        // ✅ Print raw JSON on server
+        //      Print raw JSON on server
         console.log("Verification Results:", JSON.stringify(results, null, 2));
 
-        // ✅ Render verify_results.ejs
-        res.render("verify_results.ejs", { results });
+        //  Render verify_results.ejs
+        res.render("company-routes/verify_results.ejs", { results });
     } catch (error) {
         console.error("An unexpected error occurred while processing uploads:", error);
         res.status(500).json({ error: 'An unexpected server error occurred.' });
@@ -240,23 +182,57 @@ app.post('/company-upload', uploadImages.array('certificates'), async (req, res)
 
 
 app.get('/government-login', (req, res) => {
-    res.render("govt_login.ejs");
+    try {
+        res.render("government-routes/govt_login.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/government-admin', (req, res) => {
-    res.render("govt_admin.ejs");
+    
+    try {
+        res.render("government-routes/govt_admin.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/university-admin', (req, res) => {
-    res.render("uni_admin.ejs");
+    
+    try {
+        res.render("university-routes/uni_admin.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/university-database', (req, res) => {
-    res.render("uni_database.ejs");
+    
+    try {
+        res.render("university-routes/uni_database.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/university-upload', (req, res) => {
-    res.render("uni_upload.ejs");
+    
+    try {
+        res.render("university-routes/uni_upload.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.post('/university-upload', upload.array('excelFiles'), (req, res) => {
@@ -287,7 +263,7 @@ app.post('/university-upload', upload.array('excelFiles'), (req, res) => {
         console.log(' CSV file has been successfully updated.');
 
         // --- NEW: AUTOMATICALLY RUN THE DATABASE IMPORT SCRIPT ---
-        console.log('🚀 Triggering database import script...');
+        console.log(' Triggering database import script...');
         
         const command = `node ${config.exportScriptPath}`;
 
@@ -304,7 +280,8 @@ app.post('/university-upload', upload.array('excelFiles'), (req, res) => {
             
             console.log(` Database import script finished successfully.`);
             console.log(`Script stdout: ${stdout}`);
-            res.status(200).send('Files successfully uploaded and synced with the database.');
+            alert('Files successfully uploaded and synced with the database.');
+            res.status(200).res.render("university-routes/uni_upload.ejs")
         });
 
     } catch (error) {
@@ -317,7 +294,14 @@ app.post('/university-upload', upload.array('excelFiles'), (req, res) => {
 });
 
 app.get('/university-login', (req, res) => {
-    res.render("uni_login.ejs");
+    
+    try {
+        res.render("university-routes/uni_login.ejs");
+    }
+    catch(err) {
+        console.error("There was some error processing your request.\n",err.message);
+        res.json({"error" : err.message});
+    }
 });
 
 app.get('/verify-results', (req, res) => {
@@ -342,7 +326,7 @@ app.get('/verify-results', (req, res) => {
             }
         });
         const sortedResults = results.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
-        res.render("verify_results.ejs", { results: sortedResults })
+        res.render("company-routes/verify_results.ejs", { results: sortedResults })
     } catch (err) {
         console.error("Error fetching verification results:", err);
         res.status(500).send("Error fetching verification results.");

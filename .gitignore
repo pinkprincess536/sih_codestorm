@@ -1,9 +1,8 @@
-express/node_modules
+node_modules
 model/__pycache__/
 model/.env
 model/venv/
 express/index.js
-blockchain/node_modules
 model/local_client.py
 model/main.py
 model/test2.py
