@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Certificate on Blockchain</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --jharkhand-green: #66cc99;
+            --jharkhand-dark-green: #2e8b57;
+            --jharkhand-light-green: #d4f0d4;
+            --jharkhand-gold: #ffd700;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--jharkhand-green), var(--jharkhand-dark-green));
+            color: white;
+            padding: 12px 0;
+            border-bottom: 5px solid var(--jharkhand-gold);
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            min-height: calc(100vh - 120px);
+        }
+
+        .sidebar {
+            background: var(--jharkhand-dark-green);
+            min-height: 100%;
+            padding-top: 20px;
+            width: 250px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--jharkhand-green);
+            border-left: 4px solid var(--jharkhand-gold);
+        }
+
+        .main-content {
+            padding: 25px;
+            flex: 1;
+            background: white;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--jharkhand-dark-green), var(--jharkhand-green));
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .btn-primary {
+            background: var(--jharkhand-dark-green);
+            border-color: var(--jharkhand-dark-green);
+            padding: 12px 25px;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background: var(--jharkhand-green);
+            border-color: var(--jharkhand-green);
+        }
+
+        .form-control {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .form-control:focus {
+            border-color: var(--jharkhand-green);
+            box-shadow: 0 0 0 0.2rem rgba(102, 204, 153, 0.25);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .contract-info {
+            background: var(--jharkhand-light-green);
+            border: 1px solid var(--jharkhand-green);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .nav {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .nav a {
+            color: var(--jharkhand-dark-green);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            border: 2px solid var(--jharkhand-dark-green);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            background: var(--jharkhand-dark-green);
+            color: white;
+            text-decoration: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-control {
+            flex: 1;
+        }
+
+        .verification-box {
+            background: var(--jharkhand-light-green);
+            border: 2px solid var(--jharkhand-green);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">CertSure - University Admin | Check Availability Of Certificate</h4>
+            <span>Welcome, <strong>Admin</strong></span>
+        </div>
+    </div>
+
+    <!-- Sidebar + Main Content -->
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="http://127.0.0.1:5500/uni_admin.html"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+            <a href="upload.html"><i class="fas fa-upload me-2"></i> Upload Records</a>
+            <a href="verify.html"><i class="fas fa-list me-2"></i> View Database</a>
+            <a href="#"><i class="fas fa-exclamation-circle me-2"></i> Grievances</a>
+            <a href="#"><i class="fas fa-cog me-2"></i> Settings</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="mb-4"><i class="fas fa-search me-2"></i>Check Availability Of Certificate On Blockchain</h1>
+            
+            <!-- Contract Info -->
+            <div id="contractInfo" class="contract-info">
+                <h5><i class="fas fa-info-circle me-2"></i>Blockchain Connection Info</h5>
+                <p><strong>Contract Address:</strong> <span id="contractAddress">Loading...</span></p>
+                <p><strong>Connected Account:</strong> <span id="connectedAccount">Loading...</span></p>
+                <p><strong>Network ID:</strong> <span id="networkId">Loading...</span></p>
+            </div>
+
+            <!-- Verification Section -->
+            <div class="verification-box">
+                <h5><i class="fas fa-certificate me-2"></i>Enter Certificate Details</h5>
+                <p class="text-muted">Fill in all the certificate details to verify its presence on the blockchain.</p>
+                
+                <div class="form-row">
+                    <input type="text" id="rollNo" class="form-control" placeholder="Roll No">
+                    <input type="text" id="name" class="form-control" placeholder="Name">
+                </div>
+                
+                <div class="form-row">
+                    <input type="text" id="course" class="form-control" placeholder="Course">
+                    <input type="text" id="branch" class="form-control" placeholder="Branch">
+                </div>
+                
+                <div class="form-row">
+                    <input type="text" id="grade" class="form-control" placeholder="Grade">
+                    <input type="text" id="year" class="form-control" placeholder="Year">
+                </div>
+                
+                <button class="btn btn-primary" onclick="verifyCertificate()">
+                    <i class="fas fa-search me-2"></i>Check Availability Of Certificate
+                </button>
+            </div>
+
+            <!-- Results -->
+            <div id="result"></div>
+
+            <!-- Navigation -->
+            <div class="nav">
+                <a href="upload.html">
+                    <i class="fas fa-upload me-2"></i>← Go to Upload Page
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p class="mb-0">CertSure Blockchain Certificate System</p>
+        </div>
+    </div>
+
+    <script>
+        // Load contract info on page load
+        window.onload = async () => {
+            try {
+                const response = await fetch('/api/contract-info');
+                const info = await response.json();
+                document.getElementById('contractInfo').innerHTML = `
+                    <h5><i class="fas fa-info-circle me-2"></i>Blockchain Connection Info</h5>
+                    <p><strong>Contract Address:</strong> ${info.contractAddress}</p>
+                    <p><strong>Connected Account:</strong> ${info.connectedAccount}</p>
+                    <p><strong>Network ID:</strong> ${info.networkId}</p>
+                `;
+            } catch (error) {
+                console.error('Error loading contract info:', error);
+                document.getElementById('contractInfo').innerHTML = `
+                    <h5><i class="fas fa-info-circle me-2"></i>Blockchain Connection Info</h5>
+                    <p><strong>Contract Address:</strong> <span class="text-danger">Not connected</span></p>
+                    <p><strong>Connected Account:</strong> <span class="text-danger">Not connected</span></p>
+                    <p><strong>Network ID:</strong> <span class="text-danger">Not connected</span></p>
+                `;
+            }
+        };
+
+        // Verify certificate function
+        async function verifyCertificate() {
+            const data = {
+                rollNo: document.getElementById('rollNo').value,
+                name: document.getElementById('name').value,
+                course: document.getElementById('course').value,
+                branch: document.getElementById('branch').value,
+                grade: document.getElementById('grade').value,
+                year: document.getElementById('year').value
+            };
+
+            // Validate all fields
+            if (Object.values(data).some(field => !field.trim())) {
+                showResult('<h5>❌ Missing Information</h5><p>Please fill all fields before verifying.</p>', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/verify-certificate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.isValid) {
+                    showResult(`
+                        <h5>✅ EXISTING CERTIFICATE</h5>
+                        <p><strong>Certificate verified on blockchain!</strong></p>
+                        <p><strong>Timestamp:</strong> ${new Date(result.timestamp * 1000).toLocaleString()}</p>
+                        <p><strong>Issuer Address:</strong> ${result.issuer}</p>
+                        <p><strong>Certificate Hash:</strong> <small>${result.candidateHash}</small></p>
+                        <p><em>This certificate has been successfully verified on the blockchain.</em></p>
+                    `, 'success');
+                } else {
+                    showResult(`
+                        <h5>❌ NO RECORD OF CERTIFICATE</h5>
+                        <p><strong>No matching record found on the blockchain.</strong></p>
+                        <p>This certificate may not have been uploaded or the details provided do not match.</p>
+                        <p><strong>Generated Hash:</strong> <small>${result.candidateHash}</small></p>
+                    `, 'error');
+                }
+            } catch (error) {
+                showResult(`<h5>❌ Verification Error</h5><p>${error.message}</p>`, 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        // Allow Enter key to trigger verification
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                verifyCertificate();
+            }
+        });
+    </script>
+</body>
+</html>

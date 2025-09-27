@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>University Dashboard - CertSure</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --jharkhand-green: #66cc99;
+      --jharkhand-dark-green: #2e8b57;
+      --jharkhand-light-green: #d4f0d4;
+      --jharkhand-gold: #ffd700;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--jharkhand-green), var(--jharkhand-dark-green));
+      color: white;
+      padding: 12px 0;
+      border-bottom: 5px solid var(--jharkhand-gold);
+    }
+
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .sidebar {
+      background: var(--jharkhand-dark-green);
+      width: 250px;
+      min-height: calc(100vh - 100px);
+      padding-top: 20px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 12px 20px;
+      text-decoration: none;
+      font-weight: 500;
+      border-left: 4px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: var(--jharkhand-green);
+      border-left: 4px solid var(--jharkhand-gold);
+      color: white;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 25px;
+      background-color: #f8f9fa;
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--jharkhand-dark-green);
+    }
+
+    .footer {
+      background: linear-gradient(135deg, var(--jharkhand-dark-green), var(--jharkhand-green));
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      width: 100%;
+    }
+
+    .badge {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h4 class="mb-0">CertSure - University Admin Dashboard</h4>
+        </div>
+        <div class="col-md-4 text-end">
+          <span>Welcome, <strong>Admin</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar + Main Content -->
+  <div class="main-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="uni_admin.html" class="active"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+      <a href="http://localhost:3000/upload"><i class="fas fa-upload me-2"></i> Upload Records</a>
+      <a href="http://localhost:3000/verify"><i class="fas fa-list me-2"></i> View Database</a>
+      <a href="#"><i class="fas fa-exclamation-circle me-2"></i> Grievances</a>
+      <a href="#"><i class="fas fa-cog me-2"></i> Settings</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <h3 class="mb-4">Dashboard Overview</h3>
+
+      <!-- Stat Cards -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="stat-number">1,245</div>
+            <p>Total Certificates Uploaded</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="stat-number">230</div>
+            <p>Verification Requests</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <div class="stat-number">12</div>
+            <p>Pending Grievances</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Uploads -->
+      <div class="card p-4 mb-4">
+        <h5><i class="fas fa-upload me-2"></i>Recent Uploads</h5>
+        <table class="table table-bordered mt-3">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Certificate ID</th>
+              <th>Student Name</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>CERT12345</td>
+              <td>Ravi Kumar</td>
+              <td>2025-09-01</td>
+              <td><span class="badge bg-success">Verified</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>CERT12346</td>
+              <td>Anjali Sharma</td>
+              <td>2025-09-02</td>
+              <td><span class="badge bg-warning text-dark">Pending</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>CERT12347</td>
+              <td>Amit Singh</td>
+              <td>2025-09-04</td>
+              <td><span class="badge bg-danger">Rejected</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
