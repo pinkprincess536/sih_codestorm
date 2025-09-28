@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Government Admin Dashboard - CertSure / PramaanVault</title>
+    <title>Blacklist Management - CertSure / PramaanVault</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary-color: #228a97;
@@ -162,8 +161,8 @@
             transform: translateY(-2px);
         }
 
-        /* Dashboard Content */
-        .dashboard-content {
+        /* Blacklist Content */
+        .blacklist-content {
             padding: 2rem;
         }
 
@@ -171,23 +170,23 @@
         .stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
         .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
 
         .stat-card::before {
@@ -196,83 +195,96 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 4px;
         }
 
         .stat-card.total::before {
             background: var(--info-color);
         }
 
-        .stat-card.verified::before {
-            background: var(--success-color);
-        }
-
-        .stat-card.pending::before {
-            background: var(--warning-color);
-        }
-
-        .stat-card.forgery::before {
+        .stat-card.active::before {
             background: var(--danger-color);
         }
 
+        .stat-card.suspended::before {
+            background: var(--warning-color);
+        }
+
+        .stat-card.removed::before {
+            background: var(--success-color);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-card.total .stat-icon {
+            background: var(--info-color);
+        }
+
+        .stat-card.active .stat-icon {
+            background: var(--danger-color);
+        }
+
+        .stat-card.suspended .stat-icon {
+            background: var(--warning-color);
+        }
+
+        .stat-card.removed .stat-icon {
+            background: var(--success-color);
+        }
+
         .stat-label {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #666;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
             font-weight: 500;
         }
 
         .stat-number {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
         }
 
         .stat-card.total .stat-number {
             color: var(--info-color);
         }
 
-        .stat-card.verified .stat-number {
-            color: var(--success-color);
-        }
-
-        .stat-card.pending .stat-number {
-            color: var(--warning-color);
-        }
-
-        .stat-card.forgery .stat-number {
+        .stat-card.active .stat-number {
             color: var(--danger-color);
         }
 
-        .progress {
-            height: 4px;
-            border-radius: 2px;
-            background: #e9ecef;
-            overflow: hidden;
+        .stat-card.suspended .stat-number {
+            color: var(--warning-color);
         }
 
-        .progress-bar {
-            border-radius: 2px;
-            transition: width 0.6s ease;
+        .stat-card.removed .stat-number {
+            color: var(--success-color);
         }
 
-        .stat-card.total .progress-bar {
-            background: var(--info-color);
+        .stat-change {
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
-        .stat-card.verified .progress-bar {
-            background: var(--success-color);
+        .stat-change.positive {
+            color: var(--success-color);
         }
 
-        .stat-card.pending .progress-bar {
-            background: var(--warning-color);
+        .stat-change.negative {
+            color: var(--danger-color);
         }
 
-        .stat-card.forgery .progress-bar {
-            background: var(--danger-color);
-        }
-
-        /* Management Sections */
+        /* Management Section */
         .management-section {
             background: white;
             border-radius: 15px;
@@ -338,6 +350,21 @@
             transform: translateY(-2px);
         }
 
+        .btn-add {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
         /* Tables */
         .table {
             margin-bottom: 0;
@@ -376,18 +403,18 @@
         }
 
         .status-active {
-            background: rgba(40, 167, 69, 0.1);
-            color: var(--success-color);
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
         }
 
-        .status-pending {
+        .status-suspended {
             background: rgba(255, 193, 7, 0.1);
             color: var(--warning-color);
         }
 
-        .status-suspended {
-            background: rgba(220, 53, 69, 0.1);
-            color: var(--danger-color);
+        .status-removed {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
         }
 
         .btn-action {
@@ -405,24 +432,6 @@
             color: white;
         }
 
-        .btn-approve {
-            color: var(--success-color);
-        }
-
-        .btn-approve:hover {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .btn-reject {
-            color: var(--danger-color);
-        }
-
-        .btn-reject:hover {
-            background: var(--danger-color);
-            color: white;
-        }
-
         .btn-suspend {
             color: var(--warning-color);
         }
@@ -432,11 +441,65 @@
             color: white;
         }
 
-        /* Charts */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-top: 1rem;
+        .btn-remove {
+            color: var(--success-color);
+        }
+
+        .btn-remove:hover {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-delete {
+            color: var(--danger-color);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Add Blacklist Modal */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            border: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-save {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save:hover {
+            background: #c82333;
+            transform: translateY(-2px);
         }
 
         /* Technology Icons */
@@ -483,12 +546,8 @@
                 padding: 1rem;
             }
 
-            .dashboard-content {
+            .blacklist-content {
                 padding: 1rem;
-            }
-
-            .stats-row {
-                grid-template-columns: 1fr;
             }
 
             .search-filters {
@@ -497,6 +556,10 @@
 
             .search-box {
                 min-width: 100%;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
             }
 
             .tech-icons {
@@ -542,13 +605,13 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-title">Government Admin</div>
-            <div class="sidebar-subtitle">CertSure / PramaanVault</div>
+            <div class="sidebar-title">Verification Portal</div>
+            <div class="sidebar-subtitle">Government of Jharkhand</div>
         </div>
         
         <nav class="sidebar-nav">
             <div class="nav-item">
-                <a href="govt_admin.html" class="nav-link active">
+                <a href="govt_admin.html" class="nav-link">
                     <i class="fas fa-tachometer-alt"></i>
                     Dashboard
                 </a>
@@ -557,11 +620,10 @@
                 <a href="govt_universities.html" class="nav-link">
                     <i class="fas fa-building"></i>
                     Universities
-                
                 </a>
             </div>
             <div class="nav-item">
-                <a href="comp_blacklist.html" class="nav-link">
+                <a href="comp_blacklist.html" class="nav-link active">
                     <i class="fas fa-ban"></i>
                     Blacklist
                 </a>
@@ -573,7 +635,7 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="govt_settings.html" class="nav-link">
+                <a href="#" class="nav-link">
                     <i class="fas fa-cog"></i>
                     Settings
                 </a>
@@ -598,7 +660,7 @@
                 <button class="mobile-menu-toggle" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </button>
-                <span class="header-title">Government Admin Dashboard</span>
+                <span class="header-title">Blacklist Management</span>
             </div>
             <div class="header-user">
                 <div class="user-info">
@@ -611,62 +673,83 @@
             </div>
         </div>
 
-        <!-- Dashboard Content -->
-        <div class="dashboard-content">
+        <!-- Blacklist Content -->
+        <div class="blacklist-content">
             <!-- Stats Cards -->
             <div class="stats-row">
                 <div class="stat-card total fade-in">
-                    <div class="stat-label">Total Certificates</div>
-                    <div class="stat-number">285,742</div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 85%"></div>
+                    <div class="stat-icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <div class="stat-label">Total Blacklisted</div>
+                    <div class="stat-number">156</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up me-1"></i>+8.2% from last month
                     </div>
                 </div>
                 
-                <div class="stat-card verified fade-in">
-                    <div class="stat-label">Verified Today</div>
-                    <div class="stat-number">1,248</div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 70%"></div>
+                <div class="stat-card active fade-in">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-label">Active</div>
+                    <div class="stat-number">89</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up me-1"></i>+12.5% from last month
                     </div>
                 </div>
                 
-                <div class="stat-card pending fade-in">
-                    <div class="stat-label">Pending Reviews</div>
-                    <div class="stat-number">43</div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 15%"></div>
+                <div class="stat-card suspended fade-in">
+                    <div class="stat-icon">
+                        <i class="fas fa-pause"></i>
+                    </div>
+                    <div class="stat-label">Suspended</div>
+                    <div class="stat-number">45</div>
+                    <div class="stat-change negative">
+                        <i class="fas fa-arrow-down me-1"></i>-5.3% from last month
                     </div>
                 </div>
                 
-                <div class="stat-card forgery fade-in">
-                    <div class="stat-label">Forgery Cases</div>
-                    <div class="stat-number">78</div>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 8%"></div>
+                <div class="stat-card removed fade-in">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-label">Removed</div>
+                    <div class="stat-number">22</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up me-1"></i>+15.8% from last month
                     </div>
                 </div>
             </div>
 
-            <!-- Universities Management -->
+            <!-- Blacklist Management -->
             <div class="management-section fade-in">
                 <h3 class="section-title">
-                    <i class="fas fa-building"></i>
-                    University Management
+                    <i class="fas fa-ban"></i>
+                    Blacklist Management
                 </h3>
                 
                 <div class="search-filters">
                     <div class="search-box">
-                        <input type="text" class="form-control" placeholder="Search universities..." id="orgSearch">
+                        <input type="text" class="form-control" placeholder="Search blacklisted items..." id="blacklistSearch">
                     </div>
                     <select class="form-control filter-select" id="statusFilter">
                         <option value="">All Status</option>
                         <option value="active">Active</option>
-                        <option value="pending">Pending</option>
                         <option value="suspended">Suspended</option>
+                        <option value="removed">Removed</option>
                     </select>
-                    <button class="btn-filter" onclick="filterUniversities()">
+                    <select class="form-control filter-select" id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="certificate">Certificate</option>
+                        <option value="university">University</option>
+                        <option value="individual">Individual</option>
+                    </select>
+                    <button class="btn-filter" onclick="filterBlacklist()">
                         <i class="fas fa-filter me-2"></i>Filter
+                    </button>
+                    <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addBlacklistModal">
+                        <i class="fas fa-plus me-2"></i>Add to Blacklist
                     </button>
                 </div>
                 
@@ -674,53 +757,75 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>University</th>
+                                <th>Item</th>
                                 <th>Type</th>
-                                <th>Contact</th>
+                                <th>Reason</th>
+                                <th>Date Added</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="universitiesTableBody">
+                        <tbody id="blacklistTableBody">
                             <tr>
-                                <td>Jamshedpur Insitute Of Technology</td>
-                                <td>University</td>
-                                <td>contact@jamshedpur.com</td>
+                                <td>CERT-2023-001</td>
+                                <td>Certificate</td>
+                                <td>Forged Document</td>
+                                <td>2024-01-10</td>
                                 <td><span class="status-badge status-active">Active</span></td>
                                 <td>
-                                    <button class="btn-action btn-suspend" onclick="suspendOrg(1)">
+                                    <button class="btn-action btn-suspend" onclick="suspendItem(1)">
                                         <i class="fas fa-pause"></i>
                                     </button>
-                                    <button class="btn-action btn-reject" onclick="rejectOrg(1)">
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Jharkhand University</td>
-                                <td>University</td>
-                                <td>admin@jharkhand.edu</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                                <td>
-                                    <button class="btn-action btn-suspend" onclick="suspendOrg(2)">
-                                        <i class="fas fa-pause"></i>
-                                    </button>
-                                    <button class="btn-action btn-reject" onclick="rejectOrg(2)">
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ranchi University</td>
-                                <td>University</td>
-                                <td>hr@ranchi.com</td>
-                                <td><span class="status-badge status-pending">Pending</span></td>
-                                <td>
-                                    <button class="btn-action btn-approve" onclick="approveOrg(3)">
+                                    <button class="btn-action btn-remove" onclick="removeItem(1)">
                                         <i class="fas fa-check"></i>
                                     </button>
-                                    <button class="btn-action btn-reject" onclick="rejectOrg(3)">
-                                        <i class="fas fa-ban"></i>
+                                    <button class="btn-action btn-delete" onclick="deleteItem(1)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Fake University</td>
+                                <td>University</td>
+                                <td>Unauthorized Institution</td>
+                                <td>2024-01-08</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn-action btn-suspend" onclick="suspendItem(2)">
+                                        <i class="fas fa-pause"></i>
+                                    </button>
+                                    <button class="btn-action btn-remove" onclick="removeItem(2)">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" onclick="deleteItem(2)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Rohan Shelke</td>
+                                <td>Individual</td>
+                                <td>Multiple Forgeries</td>
+                                <td>2024-01-05</td>
+                                <td><span class="status-badge status-suspended">Suspended</span></td>
+                                <td>
+                                    <button class="btn-action btn-remove" onclick="removeItem(3)">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" onclick="deleteItem(3)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CERT-2023-002</td>
+                                <td>Certificate</td>
+                                <td>Tampered Data</td>
+                                <td>2024-01-03</td>
+                                <td><span class="status-badge status-removed">Removed</span></td>
+                                <td>
+                                    <button class="btn-action btn-delete" onclick="deleteItem(4)">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -729,14 +834,52 @@
                 </div>
             </div>
 
-            <!-- Analytics Section -->
-            <div class="management-section fade-in">
-                <h3 class="section-title">
-                    <i class="fas fa-chart-line"></i>
-                    System Analytics
-                </h3>
-                <div class="chart-container">
-                    <canvas id="analyticsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Add Blacklist Modal -->
+    <div class="modal fade" id="addBlacklistModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-ban me-2"></i>Add to Blacklist
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBlacklistForm">
+                        <div class="mb-3">
+                            <label for="itemName" class="form-label">Item Name *</label>
+                            <input type="text" class="form-control" id="itemName" placeholder="Enter item name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="itemType" class="form-label">Type *</label>
+                            <select class="form-control" id="itemType" required>
+                                <option value="">Select type</option>
+                                <option value="certificate">Certificate</option>
+                                <option value="university">University</option>
+                                <option value="individual">Individual</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Reason *</label>
+                            <textarea class="form-control" id="reason" rows="3" placeholder="Enter reason for blacklisting" required></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="evidence" class="form-label">Evidence/Reference</label>
+                            <input type="text" class="form-control" id="evidence" placeholder="Enter evidence or reference">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn-save" onclick="addToBlacklist()">
+                        <i class="fas fa-ban me-2"></i>Add to Blacklist
+                    </button>
                 </div>
             </div>
         </div>
@@ -757,168 +900,115 @@
             }
         }
 
-        // Filter universities
-        function filterUniversities() {
-            const searchTerm = document.getElementById('orgSearch').value.toLowerCase();
+        // Filter blacklist
+        function filterBlacklist() {
+            const searchTerm = document.getElementById('blacklistSearch').value.toLowerCase();
             const statusFilter = document.getElementById('statusFilter').value;
-            const rows = document.querySelectorAll('#universitiesTableBody tr');
+            const typeFilter = document.getElementById('typeFilter').value;
+            const rows = document.querySelectorAll('#blacklistTableBody tr');
             
             rows.forEach(row => {
-                const orgName = row.cells[0].textContent.toLowerCase();
-                const status = row.cells[3].textContent.toLowerCase();
+                const itemName = row.cells[0].textContent.toLowerCase();
+                const type = row.cells[1].textContent.toLowerCase();
+                const status = row.cells[4].textContent.toLowerCase();
                 
-                const matchesSearch = orgName.includes(searchTerm);
+                const matchesSearch = itemName.includes(searchTerm);
                 const matchesStatus = !statusFilter || status.includes(statusFilter);
+                const matchesType = !typeFilter || type.includes(typeFilter);
                 
-                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                row.style.display = (matchesSearch && matchesStatus && matchesType) ? '' : 'none';
             });
         }
 
-        // University actions
-        function approveOrg(id) {
-            if (confirm('Are you sure you want to approve this university?')) {
-                alert(`University ${id} approved successfully!`);
-                // Update status in table
-                updateOrgStatus(id, 'active');
+        // Add to blacklist
+        function addToBlacklist() {
+            const itemName = document.getElementById('itemName').value.trim();
+            const itemType = document.getElementById('itemType').value;
+            const reason = document.getElementById('reason').value.trim();
+            const evidence = document.getElementById('evidence').value.trim();
+            
+            if (!itemName || !itemType || !reason) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Add to table
+            const tbody = document.getElementById('blacklistTableBody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${itemName}</td>
+                <td>${itemType.charAt(0).toUpperCase() + itemType.slice(1)}</td>
+                <td>${reason}</td>
+                <td>${new Date().toISOString().split('T')[0]}</td>
+                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                    <button class="btn-action btn-suspend" onclick="suspendItem(${Date.now()})">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button class="btn-action btn-remove" onclick="removeItem(${Date.now()})">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="btn-action btn-delete" onclick="deleteItem(${Date.now()})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.insertBefore(newRow, tbody.firstChild);
+            
+            // Close modal and reset form
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addBlacklistModal'));
+            modal.hide();
+            document.getElementById('addBlacklistForm').reset();
+            
+            alert('Item added to blacklist successfully!');
+        }
+
+        // Suspend item
+        function suspendItem(id) {
+            if (confirm('Are you sure you want to suspend this item?')) {
+                alert(`Item ${id} suspended successfully!`);
+                updateItemStatus(id, 'suspended');
             }
         }
 
-        function rejectOrg(id) {
-            if (confirm('Are you sure you want to reject this university?')) {
-                alert(`University ${id} rejected.`);
-                // Remove from table or mark as rejected
-                removeOrgRow(id);
+        // Remove item
+        function removeItem(id) {
+            if (confirm('Are you sure you want to remove this item from blacklist?')) {
+                alert(`Item ${id} removed from blacklist!`);
+                updateItemStatus(id, 'removed');
             }
         }
 
-        function suspendOrg(id) {
-            if (confirm('Are you sure you want to suspend this university?')) {
-                alert(`University ${id} suspended.`);
-                // Update status in table
-                updateOrgStatus(id, 'suspended');
+        // Delete item
+        function deleteItem(id) {
+            if (confirm('Are you sure you want to permanently delete this item?')) {
+                alert(`Item ${id} deleted permanently!`);
+                removeItemRow(id);
             }
         }
 
-        function updateOrgStatus(id, status) {
-            const rows = document.querySelectorAll('#universitiesTableBody tr');
+        // Update item status
+        function updateItemStatus(id, status) {
+            const rows = document.querySelectorAll('#blacklistTableBody tr');
             rows.forEach(row => {
                 if (row.onclick && row.onclick.toString().includes(id)) {
-                    const statusCell = row.cells[3];
+                    const statusCell = row.cells[4];
                     const statusClass = status === 'active' ? 'status-active' : 
-                                      status === 'suspended' ? 'status-suspended' : 'status-pending';
+                                      status === 'suspended' ? 'status-suspended' : 'status-removed';
                     statusCell.innerHTML = `<span class="status-badge ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
                 }
             });
         }
 
-        function removeOrgRow(id) {
-            const rows = document.querySelectorAll('#universitiesTableBody tr');
+        // Remove item row
+        function removeItemRow(id) {
+            const rows = document.querySelectorAll('#blacklistTableBody tr');
             rows.forEach(row => {
                 if (row.onclick && row.onclick.toString().includes(id)) {
                     row.remove();
                 }
             });
         }
-
-        // Initialize Chart
-        const ctx = document.getElementById('analyticsChart').getContext('2d');
-        const analyticsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Certificate Verifications',
-                    data: [1200, 1900, 1500, 2200, 1800, 2500, 2100, 2300, 2000, 2400, 2200, 2600],
-                    borderColor: '#228a97',
-                    backgroundColor: 'rgba(34, 138, 151, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#228a97',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 6
-                }, {
-                    label: 'Forgery Cases',
-                    data: [50, 80, 60, 90, 70, 100, 85, 95, 80, 90, 85, 95],
-                    borderColor: '#dc3545',
-                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#dc3545',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 20,
-                            font: {
-                                family: 'Poppins',
-                                size: 14,
-                                weight: '500'
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0,0,0,0.1)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            font: {
-                                family: 'Poppins',
-                                size: 12
-                            }
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            font: {
-                                family: 'Poppins',
-                                size: 12
-                            }
-                        }
-                    }
-                },
-                elements: {
-                    point: {
-                        hoverRadius: 8
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                }
-            }
-        });
-
-        // Animate progress bars on load
-        window.addEventListener('load', function() {
-            const progressBars = document.querySelectorAll('.progress-bar');
-            progressBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0%';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 500);
-            });
-        });
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(e) {
@@ -935,3 +1025,7 @@
     </script>
 </body>
 </html>
+
+
+
+

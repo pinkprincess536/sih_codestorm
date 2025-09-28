@@ -42,7 +42,7 @@ app.get('/verify', (req, res) => {
 res.sendFile(path.join(__dirname, 'public', 'verify.html'));
 });
 
-// ✅ API Endpoint to Upload CSV and Store on Blockchain
+// ✅ API Endpoint to Upload CSV and Store in System
 app.post('/api/upload-certificates', upload.single('csvFile'), async (req, res) => {
 try {
 if (!req.file) {
@@ -92,7 +92,7 @@ success: true,
 transactionHash: tx.transactionHash,
 hashesCount: hashes.length,
 gasUsed: tx.gasUsed.toString(),
-message: `Successfully uploaded ${hashes.length} certificates to blockchain`
+message: `Successfully uploaded ${hashes.length} certificates to system`
 });
 
 } catch (error) {
