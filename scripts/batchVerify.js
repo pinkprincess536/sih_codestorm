@@ -1,30 +1,18 @@
 const fs = require("fs");
-const path = require("path");
 const { parse } = require("csv-parse/sync");
 const crypto = require("crypto");
 const CertificateChain = artifacts.require("CertificateChain");
 
 module.exports = async function (callback) {
   try {
-    const args = process.argv.slice(2);
-    let csvFile = "data/certificates2.csv"; // default
-    let reportType = "summary"; // options: summary, detailed, json-only
-
-    const fileArg = args.find(arg => arg.startsWith('--file='));
-    if (fileArg) {
-      csvFile = fileArg.split('=')[1].replace(/['"]/g, '');
-    }
-    const reportArg = args.find(arg => arg.startsWith('--report='));
-    if (reportArg) {
-      reportType = reportArg.split('=')[1].replace(/['"]/g, '');
-    }
-
+    // --- Configuration ---
+    const csvFile = "data/certificates2.csv";
     console.log("🔍 BATCH CERTIFICATE VERIFICATION");
     console.log("=".repeat(50));
-    console.log(`📁 CSV File: ${csvFile}`);
-    console.log(`📊 Report Type: ${reportType}`);
+    console.log(`📁 Verifying records in: ${csvFile}`);
     console.log("=".repeat(50));
 
+    // --- Helper function for consistent hashing ---
     function stableStringify(obj) {
       return JSON.stringify(
         Object.keys(obj).sort().reduce((acc, key) => {
@@ -34,6 +22,7 @@ module.exports = async function (callback) {
       );
     }
 
+    // --- Read and Validate CSV ---
     if (!fs.existsSync(csvFile)) {
       throw new Error(`CSV file not found: ${csvFile}`);
     }
@@ -43,81 +32,52 @@ module.exports = async function (callback) {
     if (records.length === 0) {
       throw new Error("CSV file is empty or has no valid records");
     }
-
-    // ✅ match your CSV headers
-    const requiredColumns = [
-      "University Name",
-      "Certificate Holder Name",
-      "Course",
-      "Grade",
-      "Roll No",
-      "Certificate ID"
-    ];
-    const csvColumns = Object.keys(records[0]);
-    const missingColumns = requiredColumns.filter(col => !csvColumns.includes(col));
-    if (missingColumns.length > 0) {
-      throw new Error(`Missing required columns: ${missingColumns.join(", ")}`);
-    }
-
-    // Ensure hash column exists
-    if (!records[0].hasOwnProperty("hash")) {
-      records.forEach(r => r.hash = "");
-    }
-
     console.log(`✅ Found ${records.length} certificates to verify\n`);
 
+    // --- Connect to Blockchain ---
     const instance = await CertificateChain.deployed();
     console.log("🔗 Connected to blockchain");
     console.log(`📍 Contract address: ${instance.address}`);
     console.log("-".repeat(50));
 
+    // --- Verification Loop ---
     let validCount = 0;
     let invalidCount = 0;
-    const results = [];
     const startTime = Date.now();
 
     for (let i = 0; i < records.length; i++) {
       const record = records[i];
+      const progress = `[${i + 1}/${records.length}]`;
+
+      const certificateData = {
+        "University Name": record["University Name"],
+        "Certificate Holder Name": record["Certificate Holder Name"],
+        "Course": record["Course"],
+        "Grade": record["Grade"],
+        "Roll No": record["Roll No"],
+        "Certificate ID": record["Certificate ID"],
+      };
+
       const candidateHash = crypto
         .createHash("sha256")
-        .update(stableStringify(record))
+        .update(stableStringify(certificateData))
         .digest("hex");
 
-      // Store hash in the CSV row
-      record.hash = candidateHash;
-
       try {
-        const blockchainResult = await instance.verifyCertificate(candidateHash);
-        const certificateResult = {
-          index: i + 1,
-          university: record["University Name"],
-          name: record["Certificate Holder Name"],
-          course: record["Course"],
-          grade: record["Grade"],
-          rollNumber: record["Roll No"],
-          certificateId: record["Certificate ID"],
-          hash: candidateHash,
-          shortHash: candidateHash.substring(0, 12) + "...",
-          isValid: blockchainResult[0],
-          timestamp: blockchainResult[1] ? blockchainResult[1].toString() : null,
-          issuer: blockchainResult[2] || null,
-          verificationTime: new Date().toISOString()
-        };
-
-        results.push(certificateResult);
-
-        if (reportType !== "json-only") {
-          const progress = `[${i + 1}/${records.length}]`;
-          if (blockchainResult[0]) {
-            validCount++;
-            console.log(`✅ ${progress} VALID - ${certificateResult.name} (${certificateResult.university})`);
-          } else {
-            invalidCount++;
-            console.log(`❌ ${progress} INVALID - ${certificateResult.name} (${certificateResult.university})`);
-          }
+        // Capture the full array-like result from the contract.
+        const result = await instance.verifyCertificate(candidateHash);
+        // The actual boolean is the FIRST element of the result.
+        const isValid = result[0];
+        
+        if (isValid) {
+          validCount++;
+          console.log(`✅ ${progress} VALID   - ${record["Certificate Holder Name"]}`);
+        } else {
+          invalidCount++;
+          console.log(`❌ ${progress} INVALID - ${record["Certificate Holder Name"]}`);
         }
       } catch (verifyError) {
-        console.error(`❌ Error verifying ${record["Certificate Holder Name"]}: ${verifyError.message}`);
+        console.error(`🚨 ${progress} ERROR   - Verifying ${record["Certificate Holder Name"]}: ${verifyError.message}`);
         invalidCount++;
       }
     }
@@ -125,31 +85,19 @@ module.exports = async function (callback) {
     const endTime = Date.now();
     const totalTime = ((endTime - startTime) / 1000).toFixed(2);
 
-    // Save updated CSV with hash column
-    const outputCSVFile = path.join(
-      path.dirname(csvFile),
-      path.basename(csvFile, ".csv") + "_with_hash.csv"
-    );
-    const csvLines = [
-      "University Name,Certificate Holder Name,Course,Grade,Roll No,Certificate ID,hash"
-    ];
-    records.forEach(r => {
-      csvLines.push([
-        r["University Name"],
-        r["Certificate Holder Name"],
-        r["Course"],
-        r["Grade"],
-        r["Roll No"],
-        r["Certificate ID"],
-        r["hash"]
-      ].map(f => `"${f}"`).join(","));
-    });
-    fs.writeFileSync(outputCSVFile, csvLines.join("\n"));
-    console.log(`💾 Updated CSV saved with hash column: ${outputCSVFile}`);
+    // --- Final Summary Report ---
+    console.log("\n" + "=".repeat(50));
+    console.log("📊 VERIFICATION SUMMARY");
+    console.log("-".repeat(50));
+    console.log(`Total Records Checked: ${records.length}`);
+    console.log(`✅ Valid Certificates:  ${validCount}`);
+    console.log(`❌ Invalid Certificates: ${invalidCount}`);
+    console.log(`⏱️  Total Time:          ${totalTime} seconds`);
+    console.log("=".repeat(50));
 
     callback();
   } catch (err) {
-    console.error("\n❌ VERIFICATION FAILED:");
+    console.error("\n❌ SCRIPT FAILED:");
     console.error(err.message);
     callback(err);
   }
