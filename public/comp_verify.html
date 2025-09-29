@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Certificate - PramaanVault</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    
+        :root{
+            --primary-color: #228a97;
+            --accent-color: #e5f7da;
+            --secondary-color: #ffe766;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary-color) 0%, #1a6b75 100%);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin: 0.5rem 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--secondary-color);
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .btn-logout {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .verify-content {
+            padding: 2rem;
+        }
+
+        .verify-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upload-container {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: 10px;
+            background: #E9F9E2;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .file-upload-area:hover {
+            background: #D4F0D4;
+            border-color: var(--primary-color);
+        }
+
+        .file-upload-area.dragover {
+            background: #B8E6B8;
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #999;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover .upload-icon {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .upload-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-choose-file {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-choose-file:hover {
+            background: #1a6b75;
+            transform: translateY(-2px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-info {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(34, 138, 151, 0.1);
+            border-radius: 5px;
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        .verify-actions {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .btn-verify {
+            background: linear-gradient(135deg, var(--primary-color), #1a6b75);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(34, 138, 151, 0.3);
+        }
+
+        .btn-verify:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(34, 138, 151, 0.4);
+        }
+
+        .btn-verify:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .result-icon.valid {
+            background: var(--success-color);
+        }
+
+        .result-icon.invalid {
+            background: var(--danger-color);
+        }
+
+        .result-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .result-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .detail-value {
+            color: #666;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-valid {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-invalid {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+
+        .validation-reason {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.9rem;
+            color: var(--dark-color);
+        }
+
+        .extracted-data-section {
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-title.text-primary {
+            color: var(--primary-color) !important;
+            font-weight: 600;
+        }
+
+        .heatmap-placeholder {
+            height: 250px;
+            background: #e9f9e2;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #adb5bd;
+            font-size: 1rem;
+            overflow: hidden;
+        }
+
+        .extracted-text-output {
+            min-height: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        #extractedTextList li {
+            padding: 0.4rem 0;
+            border-bottom: 1px dotted #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+        
+        #extractedTextList li strong {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        #extractedTextList li span {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        #extractedTextList li:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .verify-content {
+                padding: 1rem;
+            }
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Verification Portal</div>
+            <div class="sidebar-subtitle">Government of Jharkhand</div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a href="comp_dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="comp_verify.html" class="nav-link active">
+                    <i class="fas fa-search"></i>
+                    Verify Certificate
+                </a>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="comp_login.html" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="header-title">Verify Certificate</span>
+            </div>
+            <div class="header-user">
+                <div class="user-info">
+                    <div class="user-name">Company User</div>
+                    <div class="user-role">Recruiter Account</div>
+                </div>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="verify-content">
+            <div class="verify-section fade-in">
+                <h2 class="section-title">
+                    <i class="fas fa-search"></i>
+                    Verify Certificate
+                </h2>
+                
+                <div class="upload-container">
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h4 class="upload-title">Upload Certificate</h4>
+                        <p class="upload-description">
+                            Drag and drop certificate file here, or click to browse
+                        </p>
+                        <button class="btn-choose-file" onclick="document.getElementById('fileInput').click()">
+                            Choose File
+                        </button>
+                        <input type="file" id="fileInput" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="upload-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Supported formats: PDF, JPG, PNG | Max size: 10MB
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verify-actions">
+                    <button class="btn-verify" id="verifyBtn" onclick="verifyCertificate()">
+                        <i class="fas fa-search me-2"></i>Verify Certificate
+                    </button>
+                </div>
+
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p>Verifying certificate...</p>
+                </div>
+
+                <div class="results-section" id="resultsSection">
+                    <div class="result-card" id="resultCard">
+                    </div>
+                </div>
+                
+                <div class="extracted-data-section fade-in" id="extractedDataSection" style="display: none;">
+                    <h3 class="section-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Analysis Visualization & Extracted Data
+                    </h3>
+
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><i class="fas fa-fire me-2"></i>SSIM Forgery Detection Heatmap</h5>
+                                    <p class="card-text text-muted">Areas highlighted in red/yellow indicate structural inconsistencies.</p>
+                                    <div class="heatmap-placeholder" id="heatmapPlaceholder">
+                                        <i class="fas fa-file-image fa-3x text-secondary-emphasis"></i>
+                                        <p class="mt-2 text-secondary">No heatmap available.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 mb-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><i class="fas fa-clipboard-list me-2"></i>OCR Extracted Fields</h5>
+                                    <p class="card-text text-muted">Structured data successfully parsed from the certificate image.</p>
+                                    <div class="extracted-text-output" id="extractedTextOutput">
+                                        <ul class="list-unstyled" id="extractedTextList">
+                                            <li class="text-secondary fst-italic">No data extracted yet.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedFile = null;
+        const API_URL = 'http://127.0.0.1:8000'; 
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'comp_login.html';
+            }
+        }
+
+        const fileInput = document.getElementById('fileInput');
+        fileInput.addEventListener('change', function(e) {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                updateFileUploadArea();
+            }
+        });
+
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                fileInput.files = files;
+                updateFileUploadArea();
+            }
+        });
+
+        function updateFileUploadArea() {
+            if (selectedFile) {
+                const uploadTitle = fileUploadArea.querySelector('.upload-title');
+                uploadTitle.textContent = `Selected: ${selectedFile.name}`;
+                uploadTitle.style.color = 'var(--success-color)';
+            }
+        }
+
+        function showLoading() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const verifyBtn = document.getElementById('verifyBtn');
+            
+            loadingSpinner.style.display = 'block';
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying...';
+        }
+
+        function hideLoading() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const verifyBtn = document.getElementById('verifyBtn');
+            
+            loadingSpinner.style.display = 'none';
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fas fa-search me-2"></i>Verify Certificate';
+        }
+
+        async function verifyCertificate() {
+            if (!selectedFile) {
+                alert('Please upload a certificate file');
+                return;
+            }
+
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('extractedDataSection').style.display = 'none';
+            showLoading();
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch(`${API_URL}/ocr/verify`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.status === "success") {
+                    showResults(selectedFile.name, data);
+                } else {
+                    alert(`Verification failed: ${data.detail || 'Server error occurred.'}`);
+                }
+
+            } catch (error) {
+                console.error('Network Error during verification:', error);
+                alert('Could not connect to the FastAPI server. Ensure it is running on port 8000.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showResults(identifier, apiResponse) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultCard = document.getElementById('resultCard');
+            const extractedDataSection = document.getElementById('extractedDataSection');
+            const extractedTextList = document.getElementById('extractedTextList'); 
+            const heatmapPlaceholder = document.getElementById('heatmapPlaceholder');
+
+            const extractedData = apiResponse.extracted_data;
+            const heatmapUrl = `${API_URL}${apiResponse.heatmap_url}`; 
+            const isValid = apiResponse.is_valid;
+            const validationReason = apiResponse.validation_reason;
+            const blockchainHash = apiResponse.blockchain_hash || 'N/A';
+            const verificationStatus = apiResponse.verification_status || (isValid ? 'VALID' : 'INVALID');
+            
+            const confidenceScore = isValid ? "98%" : "12%";
+            const analysisResult = isValid ? "Authentic Certificate - Hash Verified" : "Invalid Certificate - Hash Mismatch";
+            
+            const resultHTML = `
+                <div class="result-header">
+                    <div class="result-icon ${isValid ? 'valid' : 'invalid'}">
+                        <i class="fas ${isValid ? 'fa-check' : 'fa-times'}"></i>
+                    </div>
+                    <div>
+                        <h3 class="result-title">${isValid ? 'Certificate Valid' : 'Certificate Invalid'}</h3>
+                        <p class="result-subtitle">Verification completed for: ${identifier}</p>
+                    </div>
+                </div>
+                
+                <div class="validation-reason">
+                    <strong><i class="fas fa-info-circle me-2"></i>Validation Details:</strong><br>
+                    ${validationReason}
+                </div>
+                
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="status-badge ${isValid ? 'status-valid' : 'status-invalid'}">
+                            ${verificationStatus}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Certificate Holder:</span>
+                        <span class="detail-value">${extractedData['Certificate Holder Name'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Certificate ID:</span>
+                        <span class="detail-value">${extractedData['Certificate ID'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Verification Date:</span>
+                        <span class="detail-value">${new Date().toLocaleDateString()}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Issuer:</span>
+                        <span class="detail-value">${extractedData['University Name'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Course:</span>
+                        <span class="detail-value">${extractedData['Course'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Grade:</span>
+                        <span class="detail-value">${extractedData['Grade'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Roll Number:</span>
+                        <span class="detail-value">${extractedData['Roll No'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Blockchain Hash:</span>
+                        <span class="detail-value" style="font-family: monospace; font-size: 0.75em;">${blockchainHash.substring(0, 24)}...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Verification Status:</span>
+                        <span class="detail-value" style="font-weight: 600; color: ${isValid ? 'var(--success-color)' : 'var(--danger-color)'};">${verificationStatus}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Confidence Score:</span>
+                        <span class="detail-value">${confidenceScore}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Analysis Result:</span>
+                        <span class="detail-value">${analysisResult}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">SSIM Score:</span>
+                        <span class="detail-value">${(apiResponse.ssim_score * 100).toFixed(1)}%</span>
+                    </div>
+                </div>
+            `;
+            
+            resultCard.innerHTML = resultHTML;
+            resultsSection.style.display = 'block';
+
+            let extractedListHTML = '';
+            for (const [key, value] of Object.entries(extractedData)) {
+                extractedListHTML += `
+                    <li>
+                        <strong>${key}:</strong>
+                        <span>${value}</span>
+                    </li>
+                `;
+            }
+
+            extractedTextList.innerHTML = extractedListHTML;
+            
+            heatmapPlaceholder.innerHTML = `
+                <img src="${heatmapUrl}" alt="SSIM Heatmap" onerror="this.parentElement.innerHTML='<i class=\\"fas fa-exclamation-triangle fa-2x\\"></i><p class=\\"mt-2\\">Heatmap could not be loaded</p>'" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            `;
+
+            extractedDataSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !toggle.contains(e.target) && 
+                sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

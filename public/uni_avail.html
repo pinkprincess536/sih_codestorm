@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Admin Login - CertSure</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #228a97;
+            --accent-color: #e5f7da;
+            --secondary-color: #ffe766;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary-color) 0%, #1a6b75 100%);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin: 0.5rem 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--secondary-color);
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .btn-logout {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--jharkhand-dark-green), var(--jharkhand-green));
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #1a6b75);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(34, 138, 151, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(34, 138, 151, 0.4);
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(34, 138, 151, 0.25);
+            background: white;
+        }
+
+        /* Content Sections */
+        .verify-content {
+            padding: 2rem;
+        }
+
+        .verify-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .error {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .contract-info {
+            background: var(--accent-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .nav a {
+            color: var(--jharkhand-dark-green);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            border: 2px solid var(--jharkhand-dark-green);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            background: var(--jharkhand-dark-green);
+            color: white;
+            text-decoration: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-control {
+            flex: 1;
+        }
+
+        .verification-box {
+            background: var(--accent-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .verify-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">University Portal</div>
+            <div class="sidebar-subtitle">Government of Jharkhand</div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a href="uni_dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="uni_upload.html" class="nav-link">
+                    <i class="fas fa-upload"></i>
+                    Upload Certificates
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="uni_manage.html" class="nav-link">
+                    <i class="fas fa-cogs"></i>
+                    Manage Certificates
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="uni_avail.html" class="nav-link active">
+                    <i class="fas fa-search"></i>
+                    Check Availability
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="uni_reports.html" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    Reports
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="uni_settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="nav-item">
+                <a href="uni_login.html" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="header-title">Check Availability</span>
+            </div>
+            <div class="header-user">
+                <div class="user-info">
+                    <div class="user-name">University Admin</div>
+                    <div class="user-role">Educational Institution</div>
+                </div>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Verify Content -->
+        <div class="verify-content">
+            <div class="verify-section fade-in">
+                <h2 class="section-title">
+                    <i class="fas fa-search"></i>
+                    Check Certificate Availability
+                </h2>
+                
+                <!-- Contract Info -->
+                <div id="contractInfo" class="contract-info">
+                    <h5><i class="fas fa-info-circle me-2"></i>System Connection Info</h5>
+                    <p><strong>Contract Address:</strong> <span id="contractAddress">Loading...</span></p>
+                    <p><strong>Connected Account:</strong> <span id="connectedAccount">Loading...</span></p>
+                    <p><strong>Network ID:</strong> <span id="networkId">Loading...</span></p>
+                </div>
+
+                <!-- Verification Section -->
+                <div class="verification-box">
+                    <h5><i class="fas fa-certificate me-2"></i>Enter Certificate Details</h5>
+                    <p class="text-muted">Fill in all the certificate details to verify its presence in the system.</p>
+                
+                    <div class="form-row">
+                        <input type="text" id="rollNo" class="form-control" placeholder="Roll No">
+                        <input type="text" id="name" class="form-control" placeholder="Name">
+                    </div>
+                    
+                    <div class="form-row">
+                        <input type="text" id="course" class="form-control" placeholder="Course">
+                        <input type="text" id="branch" class="form-control" placeholder="Branch">
+                    </div>
+                    
+                    <div class="form-row">
+                        <input type="text" id="grade" class="form-control" placeholder="Grade">
+                        <input type="text" id="year" class="form-control" placeholder="Year">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="verifyCertificate()">
+                        <i class="fas fa-search me-2"></i>Check Availability Of Certificate
+                    </button>
+                </div>
+
+                <!-- Results -->
+                <div id="result"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load contract info on page load
+        window.onload = async () => {
+            try {
+                const response = await fetch('/api/contract-info');
+                const info = await response.json();
+                document.getElementById('contractInfo').innerHTML = `
+                    <h5><i class="fas fa-info-circle me-2"></i>Blockchain Connection Info</h5>
+                    <p><strong>Contract Address:</strong> ${info.contractAddress}</p>
+                    <p><strong>Connected Account:</strong> ${info.connectedAccount}</p>
+                    <p><strong>Network ID:</strong> ${info.networkId}</p>
+                `;
+            } catch (error) {
+                console.error('Error loading contract info:', error);
+                document.getElementById('contractInfo').innerHTML = `
+                    <h5><i class="fas fa-info-circle me-2"></i>Blockchain Connection Info</h5>
+                    <p><strong>Contract Address:</strong> <span class="text-danger">Not connected</span></p>
+                    <p><strong>Connected Account:</strong> <span class="text-danger">Not connected</span></p>
+                    <p><strong>Network ID:</strong> <span class="text-danger">Not connected</span></p>
+                `;
+            }
+        };
+
+        // Verify certificate function
+        async function verifyCertificate() {
+            const data = {
+                rollNo: document.getElementById('rollNo').value,
+                name: document.getElementById('name').value,
+                course: document.getElementById('course').value,
+                branch: document.getElementById('branch').value,
+                grade: document.getElementById('grade').value,
+                year: document.getElementById('year').value
+            };
+
+            // Validate all fields
+            if (Object.values(data).some(field => !field.trim())) {
+                showResult('<h5>❌ Missing Information</h5><p>Please fill all fields before verifying.</p>', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/verify-certificate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.isValid) {
+                    showResult(`
+                        <h5>✅ EXISTING CERTIFICATE</h5>
+                        <p><strong>Certificate verified on blockchain!</strong></p>
+                        <p><strong>Timestamp:</strong> ${new Date(result.timestamp * 1000).toLocaleString()}</p>
+                        <p><strong>Issuer Address:</strong> ${result.issuer}</p>
+                        <p><strong>Certificate Hash:</strong> <small>${result.candidateHash}</small></p>
+                        <p><em>This certificate has been successfully verified on the blockchain.</em></p>
+                    `, 'success');
+                } else {
+                    showResult(`
+                        <h5>❌ NO RECORD OF CERTIFICATE</h5>
+                        <p><strong>No matching record found on the blockchain.</strong></p>
+                        <p>This certificate may not have been uploaded or the details provided do not match.</p>
+                        <p><strong>Generated Hash:</strong> <small>${result.candidateHash}</small></p>
+                    `, 'error');
+                }
+            } catch (error) {
+                showResult(`<h5>❌ Verification Error</h5><p>${error.message}</p>`, 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'uni_login.html';
+            }
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !toggle.contains(e.target) && 
+                sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
