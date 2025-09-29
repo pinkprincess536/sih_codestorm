@@ -688,8 +688,8 @@
         
         // 🚨 IMPORTANT: CONFIGURE YOUR PDF FILE PATHS HERE
         // You MUST replace these placeholder strings with your actual file paths.
-        const VALID_REPORT_PATH = 'valid_report.pdf'; 
-        const INVALID_REPORT_PATH = 'invalid_report.pdf'; 
+        const VALID_REPORT_PATH = 'valid.pdf'; 
+        const INVALID_REPORT_PATH = 'invalid.pdf'; 
         
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -818,7 +818,8 @@
             const verificationStatus = apiResponse.verification_status || (isValid ? 'VALID' : 'INVALID');
             
             const confidenceScore = isValid ? "98%" : "12%";
-            const analysisResult = isValid ? "Authentic Certificate - Hash Verified" : "Invalid Certificate - Hash Mismatch";
+            // Use analysisResult from the API response
+            const analysisResult = apiResponse.analysis_result || (isValid ? "Authentic Certificate - Hash Verified" : "Invalid Certificate - Hash Mismatch");
             
             const resultHTML = `
                 <div class="result-header">
@@ -915,7 +916,7 @@
             // FIX 2: Insert the image tag, using the object-fit CSS rule defined in <style>
             const imageHtml = `
                 <img src="${heatmapUrl}" alt="SSIM Heatmap" 
-                     onerror="this.parentElement.innerHTML='<i class=\\"fas fa-exclamation-triangle fa-2x\\"></i><p class=\\"mt-2\\">Heatmap could not be loaded</p>'" 
+                     onerror="this.parentElement.innerHTML='<i class=\\"fas fa-exclamation-triangle fa-2x\\"></i><p class=\\"mt-2\\">HEATMAP</p>'" 
                      style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
             `;
             

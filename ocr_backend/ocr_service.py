@@ -17,7 +17,7 @@ import requests
 from typing import Dict, Tuple, Any
 
 # ====================================================================
-# CONFIGURATION AND INITIALIZATION
+# CONFIGURATION AND INITIALIZATION (Remains the same)
 # ====================================================================
 # Node.js/Express Backend URL for Verification
 BLOCKCHAIN_API_URL = 'http://localhost:3000/api/verify-certificate' 
@@ -25,7 +25,10 @@ BLOCKCHAIN_API_URL = 'http://localhost:3000/api/verify-certificate'
 # The path for the genuine certificate template.
 REFERENCE_IMAGE_PATH = 'genuine.png'
 CSV_PATH = 'data/certificates2.csv'
-HEATMAP_FOLDER = 'heatmaps' # Match the existing structure in main.py for file creation
+HEATMAP_FOLDER = 'heatmaps' 
+
+# 💡 SSIM Threshold for Layout Inconsistency (98%)
+SSIM_LAYOUT_THRESHOLD = 0.98
 
 try:
     # Initialize the EasyOCR Reader
@@ -34,40 +37,28 @@ except Exception as e:
     print(f"Error initializing EasyOCR Reader: {e}")
     READER = None
 
-# Ensure folders exist (matching logic from main.py)
+# Ensure folders exist
 os.makedirs('data', exist_ok=True)
 os.makedirs(HEATMAP_FOLDER, exist_ok=True)
 
 
 # ====================================================================
-# HASHING HELPER FUNCTION (CRITICAL: Matches server.js logic)
+# HASHING HELPER FUNCTION (Remains the same)
 # ====================================================================
 
 def generate_stable_hash(extracted_data: Dict[str, Any]) -> Tuple[str, str]:
     """
     Generates a SHA-256 hash from the extracted data using a stable JSON stringification
     method that mirrors the JavaScript implementation in server.js.
-    
-    Returns:
-        Tuple[str, str]: (Generated hash, stable JSON string)
     """
-    # 1. Create a stable JSON string by sorting the dictionary keys and removing whitespace.
-    #    This mirrors JavaScript's Object.keys().sort() approach used by stableStringify in server.js.
     stable_json_string = json.dumps(extracted_data, sort_keys=True, separators=(',', ':'))
-    
-    # 2. Create a SHA-256 hash object
     sha256_hash = hashlib.sha256()
-    
-    # 3. Update the hash object with the bytes of the stable JSON string
     sha256_hash.update(stable_json_string.encode('utf-8'))
-    
-    # 4. Get the hexadecimal representation of the hash
     final_hash = sha256_hash.hexdigest()
-    
     return final_hash, stable_json_string
 
 # ====================================================================
-# BLOCKCHAIN VERIFICATION HELPER FUNCTION
+# BLOCKCHAIN VERIFICATION HELPER FUNCTION (Remains the same)
 # ====================================================================
 
 def verify_on_blockchain(extracted_data: Dict[str, Any], candidate_hash: str) -> Dict[str, Any]:
@@ -76,7 +67,6 @@ def verify_on_blockchain(extracted_data: Dict[str, Any], candidate_hash: str) ->
     """
     print(f"--- Verifying Hash {candidate_hash[:8]}... on Blockchain via Node.js API ---")
     
-    # Map Python keys to the keys expected by the Node.js API endpoint /api/verify-certificate
     api_payload = {
         "university": extracted_data.get('University Name', 'N/A'),
         "holderName": extracted_data.get('Certificate Holder Name', 'N/A'),
@@ -88,7 +78,7 @@ def verify_on_blockchain(extracted_data: Dict[str, Any], candidate_hash: str) ->
     
     try:
         response = requests.post(BLOCKCHAIN_API_URL, json=api_payload)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+        response.raise_for_status() 
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"FATAL: Error connecting to Node.js verification API: {e}")
@@ -101,7 +91,7 @@ def verify_on_blockchain(extracted_data: Dict[str, Any], candidate_hash: str) ->
         }
 
 # ====================================================================
-# OCR FIELD EXTRACTION (Copied from main.py)
+# OCR FIELD EXTRACTION (Remains the same)
 # ====================================================================
 
 def extract_fields(image_path):
@@ -181,11 +171,10 @@ def extract_fields(image_path):
         return extracted_data
 
 # ====================================================================
-# SSIM HEATMAP GENERATION (Copied from main.py)
+# SSIM HEATMAP GENERATION (Remains the same)
 # ====================================================================
 
 def generate_ssim_heatmap(reference_path, test_path, output_path):
-    # This is the function body copied directly from the original main.py
     try:
         reference = cv2.imread(reference_path)
         test = cv2.imread(test_path)
@@ -209,7 +198,6 @@ def generate_ssim_heatmap(reference_path, test_path, output_path):
         heatmap = (heatmap * 255).astype(np.uint8)
         heatmap_on_image = cv2.addWeighted(test, 0.7, heatmap, 0.3, 0)
         
-        # NOTE: Using cv2.imwrite for consistency with original main.py implementation
         cv2.imwrite(output_path, cv2.cvtColor(heatmap_on_image, cv2.COLOR_RGB2BGR))
         
         return score
@@ -224,55 +212,91 @@ def generate_ssim_heatmap(reference_path, test_path, output_path):
 
 def process_certificate(file_path: str) -> Dict[str, Any]:
     """
-    Main function called by the FastAPI route to process the uploaded file,
-    perform OCR, generate hash, verify on blockchain, and generate heatmap.
+    Main function called by the FastAPI route to process the uploaded file.
+    
+    The logic is updated so 'analysis_result' directly uses the final 'validation_reason'.
     """
     
-    # --- 1. RUN OCR EXTRACTION ---
+    # --- 1. RUN OCR EXTRACTION & HASH GENERATION ---
     extracted_data = extract_fields(file_path)
-    print(f"Extracted data: {extracted_data}")
-    
-    # --- 2. GENERATE HASH (STABLE) ---
     generated_hash, stable_json = generate_stable_hash(extracted_data)
-    print(f"Generated Stable Hash: {generated_hash}")
     
-    # --- 3. RUN BLOCKCHAIN VERIFICATION ---
-    verification_results = verify_on_blockchain(extracted_data, generated_hash)
-    
-    # --- 4. GENERATE HEATMAP ---
+    # --- 2. GENERATE HEATMAP & SSIM SCORE ---
     os.makedirs(HEATMAP_FOLDER, exist_ok=True)
     heatmap_filename = f"{uuid.uuid4()}_heatmap.png"
     heatmap_path = os.path.join(HEATMAP_FOLDER, heatmap_filename)
 
-    ssim_score = generate_ssim_heatmap(REFERENCE_IMAGE_PATH, file_path, heatmap_path)
+    ssim_score_raw = generate_ssim_heatmap(REFERENCE_IMAGE_PATH, file_path, heatmap_path)
+    ssim_score = float(ssim_score_raw) if ssim_score_raw is not None else 0.0
+
+    # --- 3. INITIALIZE STATUS AND RESULTS ---
+    is_valid = False
+    verification_status = "INVALID"
+    analysis_result = "" # This will be overwritten by validation_reason
+    validation_reason = ""
+    verification_results = {} 
+
+    # --- 4. VERIFICATION LOGIC (SSIM FIRST) ---
     
-    # --- 5. CLEANUP ---
-    # Delete the original uploaded file
+    # 💡 CHECK A: SSIM Score for Layout Inconsistency
+    if ssim_score < SSIM_LAYOUT_THRESHOLD:
+        validation_reason = f"Certificate rejected: Layout SSIM score ({ssim_score * 100:.2f}%) is below the {SSIM_LAYOUT_THRESHOLD * 100:.0f}% threshold, indicating an incorrect format or tampering."
+    else:
+        # 💡 CHECK B: Blockchain Content Verification (Only if layout is OK)
+        verification_results = verify_on_blockchain(extracted_data, generated_hash)
+        
+        if verification_results.get('error'):
+            # Blockchain Service Error
+            validation_reason = f"Verification service failed: {verification_results['error']}"
+        elif verification_results.get('isValid') is True:
+            # Blockchain Match (Final SUCCESS)
+            is_valid = True
+            verification_status = "VALID"
+            validation_reason = "Certificate is valid. Layout matched template and content hash matched the blockchain record."
+        else:
+            # Blockchain Mismatch (Content Tampering)
+            validation_reason = "Certificate layout matched template, but content hash did NOT match any blockchain record."
+
+
+    # --- 5. FINAL STATUS ASSIGNMENT (Based on the outcome of the checks) ---
+    
+    if is_valid:
+        # Success case
+        analysis_result = validation_reason
+    elif "incorrect format" in validation_reason:
+        # Specific SSIM failure case
+        analysis_result = "incorrect format"
+    elif "did NOT match any blockchain record" in validation_reason:
+        # Specific Blockchain failure case
+        analysis_result = "hash mismatch"
+    else:
+        # Service failure/unhandled error case
+        analysis_result = validation_reason
+        
+    # Ensure verification_status is correct for successful verification
+    if is_valid:
+        verification_status = "VALID"
+    else:
+        verification_status = "INVALID"
+
+
+    # --- 6. CLEANUP ---
     if os.path.exists(file_path):
         os.remove(file_path)
         print(f"Cleaned up temporary file: {file_path}")
 
-    # --- 6. FORMAT FINAL RESPONSE ---
+    # --- 7. FORMAT FINAL RESPONSE ---
     
-    is_valid = verification_results.get('isValid', False)
-    blockchain_status = "VALID" if is_valid else "INVALID"
-    
-    if is_valid:
-        validation_reason = "Certificate hash matches blockchain record. This certificate is authentic and has been verified against the university's blockchain ledger."
-    elif 'error' in verification_results:
-        validation_reason = f"Verification service failed: {verification_results['error']}"
-    else:
-        validation_reason = "Certificate hash does NOT match any blockchain record. This certificate may be forged, altered, or not issued by the claimed institution."
-
     return {
         "status": "success",
         "extracted_data": extracted_data,
         "heatmap_url": f"/ocr/heatmap/{heatmap_filename}",
-        "ssim_score": float(ssim_score) if ssim_score else 0.0,
+        "ssim_score": ssim_score,
         "blockchain_hash": generated_hash,
         "is_valid": is_valid,
         "validation_reason": validation_reason,
-        "verification_status": blockchain_status,
+        "verification_status": verification_status,
+        "analysis_result": analysis_result, # 💡 Now set based on validation_reason logic above
         "issuer": verification_results.get('issuer', 'N/A'),
         "timestamp": verification_results.get('timestamp', '0')
     }
