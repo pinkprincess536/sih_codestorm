@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
+    
+        :root{
             --primary-color: #228a97;
             --accent-color: #e5f7da;
             --secondary-color: #ffe766;
@@ -20,7 +21,7 @@
             --info-color: #17a2b8;
         }
 
-        * {
+        *{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -33,7 +34,6 @@
             background-color: #f8f9fa;
         }
 
-        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
@@ -103,14 +103,12 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Main Content */
         .main-content {
             margin-left: 280px;
             min-height: 100vh;
             transition: all 0.3s ease;
         }
 
-        /* Header */
         .header {
             background: white;
             padding: 1rem 2rem;
@@ -161,7 +159,6 @@
             transform: translateY(-2px);
         }
 
-        /* Verify Content */
         .verify-content {
             padding: 2rem;
         }
@@ -184,13 +181,11 @@
             gap: 0.5rem;
         }
 
-        /* Upload Container */
         .upload-container {
             max-width: 600px;
             margin: 0 auto 2rem;
         }
 
-        /* File Upload Area */
         .file-upload-area {
             border: 2px dashed var(--primary-color);
             border-radius: 10px;
@@ -274,7 +269,6 @@
             font-size: 0.8rem;
         }
 
-        /* Verify Button */
         .verify-actions {
             text-align: center;
             margin: 2rem 0;
@@ -304,48 +298,27 @@
             transform: none;
         }
 
-        /* Verification Info */
-        .verification-info {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 1.5rem;
+        .loading-spinner {
+            display: none;
+            text-align: center;
             margin: 2rem 0;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
-        .verification-info h3 {
-            color: var(--dark-color);
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
 
-        .verification-info p {
-            color: #666;
-            margin-bottom: 1rem;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .verification-info ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .verification-info li {
-            padding: 0.5rem 0;
-            color: #666;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .verification-info li:last-child {
-            border-bottom: none;
-        }
-
-        .verification-info strong {
-            color: var(--primary-color);
-        }
-
-        /* Results Section */
         .results-section {
             margin-top: 2rem;
             display: none;
@@ -420,6 +393,9 @@
 
         .detail-value {
             color: #666;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
         }
 
         .status-badge {
@@ -440,66 +416,82 @@
             color: var(--danger-color);
         }
 
-        /* Technology Icons */
-        .tech-icons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        .validation-reason {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.9rem;
+            color: var(--dark-color);
         }
 
-        .tech-icon {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            background: white;
+        .extracted-data-section {
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+            margin-top: 2rem;
+        }
+        
+        .card {
             border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-title.text-primary {
+            color: var(--primary-color) !important;
+            font-weight: 600;
+        }
+
+        .heatmap-placeholder {
+            height: 250px;
+            background: #e9f9e2;
+            border: 2px solid var(--accent-color);
             border-radius: 8px;
-            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #adb5bd;
+            font-size: 1rem;
+            overflow: hidden;
+        }
+
+        .extracted-text-output {
+            min-height: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        #extractedTextList li {
+            padding: 0.4rem 0;
+            border-bottom: 1px dotted #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+        
+        #extractedTextList li strong {
             color: var(--dark-color);
             font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        .tech-icon:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .tech-icon i {
-            font-size: 1rem;
+        
+        #extractedTextList li span {
             color: var(--primary-color);
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        #extractedTextList li:last-child {
+            border-bottom: none;
         }
 
-        /* Loading Spinner */
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -521,17 +513,8 @@
             .verify-content {
                 padding: 1rem;
             }
-
-            .verification-methods {
-                grid-template-columns: 1fr;
-            }
-
-            .tech-icons {
-                justify-content: flex-start;
-            }
         }
 
-        /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
             background: var(--primary-color);
@@ -548,7 +531,6 @@
             }
         }
 
-        /* Animations */
         .fade-in {
             animation: fadeInUp 0.6s ease-out;
         }
@@ -566,7 +548,6 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-title">Verification Portal</div>
@@ -604,9 +585,7 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
         <div class="header">
             <div>
                 <button class="mobile-menu-toggle" onclick="toggleSidebar()">
@@ -625,7 +604,6 @@
             </div>
         </div>
 
-        <!-- Verify Content -->
         <div class="verify-content">
             <div class="verify-section fade-in">
                 <h2 class="section-title">
@@ -633,7 +611,6 @@
                     Verify Certificate
                 </h2>
                 
-                <!-- File Upload Area -->
                 <div class="upload-container">
                     <div class="file-upload-area" id="fileUploadArea">
                         <div class="upload-icon">
@@ -654,28 +631,57 @@
                     </div>
                 </div>
 
-                <!-- Verify Button -->
                 <div class="verify-actions">
                     <button class="btn-verify" id="verifyBtn" onclick="verifyCertificate()">
                         <i class="fas fa-search me-2"></i>Verify Certificate
                     </button>
                 </div>
 
-                
-
-                <!-- Loading Spinner -->
                 <div class="loading-spinner" id="loadingSpinner">
                     <div class="spinner"></div>
                     <p>Verifying certificate...</p>
                 </div>
 
-                <!-- Results Section -->
                 <div class="results-section" id="resultsSection">
                     <div class="result-card" id="resultCard">
-                        <!-- Results will be displayed here -->
                     </div>
                 </div>
+                
+                <div class="extracted-data-section fade-in" id="extractedDataSection" style="display: none;">
+                    <h3 class="section-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Analysis Visualization & Extracted Data
+                    </h3>
 
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><i class="fas fa-fire me-2"></i>SSIM Forgery Detection Heatmap</h5>
+                                    <p class="card-text text-muted">Areas highlighted in red/yellow indicate structural inconsistencies.</p>
+                                    <div class="heatmap-placeholder" id="heatmapPlaceholder">
+                                        <i class="fas fa-file-image fa-3x text-secondary-emphasis"></i>
+                                        <p class="mt-2 text-secondary">No heatmap available.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 mb-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><i class="fas fa-clipboard-list me-2"></i>OCR Extracted Fields</h5>
+                                    <p class="card-text text-muted">Structured data successfully parsed from the certificate image.</p>
+                                    <div class="extracted-text-output" id="extractedTextOutput">
+                                        <ul class="list-unstyled" id="extractedTextList">
+                                            <li class="text-secondary fst-italic">No data extracted yet.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -683,29 +689,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let selectedFile = null;
+        const API_URL = 'http://127.0.0.1:8000'; 
 
-        // Sidebar toggle for mobile
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
         }
 
-        // Logout function
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 window.location.href = 'comp_login.html';
             }
         }
 
-        // File input change handler
-        document.getElementById('fileInput').addEventListener('change', function(e) {
+        const fileInput = document.getElementById('fileInput');
+        fileInput.addEventListener('change', function(e) {
             selectedFile = e.target.files[0];
             if (selectedFile) {
                 updateFileUploadArea();
             }
         });
 
-        // Drag and drop handlers
         const fileUploadArea = document.getElementById('fileUploadArea');
         
         fileUploadArea.addEventListener('dragover', function(e) {
@@ -724,12 +728,11 @@
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 selectedFile = files[0];
-                document.getElementById('fileInput').files = files;
+                fileInput.files = files;
                 updateFileUploadArea();
             }
         });
 
-        // Update file upload area
         function updateFileUploadArea() {
             if (selectedFile) {
                 const uploadTitle = fileUploadArea.querySelector('.upload-title');
@@ -738,24 +741,6 @@
             }
         }
 
-        // Verify certificate
-        function verifyCertificate() {
-            if (!selectedFile) {
-                alert('Please upload a certificate file');
-                return;
-            }
-
-            // Show loading
-            showLoading();
-
-            // Simulate verification process
-            setTimeout(() => {
-                hideLoading();
-                showResults(selectedFile.name);
-            }, 3000);
-        }
-
-        // Show loading
         function showLoading() {
             const loadingSpinner = document.getElementById('loadingSpinner');
             const verifyBtn = document.getElementById('verifyBtn');
@@ -765,7 +750,6 @@
             verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying...';
         }
 
-        // Hide loading
         function hideLoading() {
             const loadingSpinner = document.getElementById('loadingSpinner');
             const verifyBtn = document.getElementById('verifyBtn');
@@ -775,13 +759,57 @@
             verifyBtn.innerHTML = '<i class="fas fa-search me-2"></i>Verify Certificate';
         }
 
-        // Show results
-        function showResults(identifier) {
+        async function verifyCertificate() {
+            if (!selectedFile) {
+                alert('Please upload a certificate file');
+                return;
+            }
+
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('extractedDataSection').style.display = 'none';
+            showLoading();
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch(`${API_URL}/ocr/verify`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.status === "success") {
+                    showResults(selectedFile.name, data);
+                } else {
+                    alert(`Verification failed: ${data.detail || 'Server error occurred.'}`);
+                }
+
+            } catch (error) {
+                console.error('Network Error during verification:', error);
+                alert('Could not connect to the FastAPI server. Ensure it is running on port 8000.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showResults(identifier, apiResponse) {
             const resultsSection = document.getElementById('resultsSection');
             const resultCard = document.getElementById('resultCard');
+            const extractedDataSection = document.getElementById('extractedDataSection');
+            const extractedTextList = document.getElementById('extractedTextList'); 
+            const heatmapPlaceholder = document.getElementById('heatmapPlaceholder');
+
+            const extractedData = apiResponse.extracted_data;
+            const heatmapUrl = `${API_URL}${apiResponse.heatmap_url}`; 
+            const isValid = apiResponse.is_valid;
+            const validationReason = apiResponse.validation_reason;
+            const blockchainHash = apiResponse.blockchain_hash || 'N/A';
+            const verificationStatus = apiResponse.verification_status || (isValid ? 'VALID' : 'INVALID');
             
-            // Simulate random result
-            const isValid = Math.random() > 0.3; // 70% chance of being valid
+            const confidenceScore = isValid ? "98%" : "12%";
+            const analysisResult = isValid ? "Authentic Certificate - Hash Verified" : "Invalid Certificate - Hash Mismatch";
             
             const resultHTML = `
                 <div class="result-header">
@@ -794,16 +822,25 @@
                     </div>
                 </div>
                 
+                <div class="validation-reason">
+                    <strong><i class="fas fa-info-circle me-2"></i>Validation Details:</strong><br>
+                    ${validationReason}
+                </div>
+                
                 <div class="result-details">
                     <div class="detail-row">
                         <span class="detail-label">Status:</span>
                         <span class="status-badge ${isValid ? 'status-valid' : 'status-invalid'}">
-                            ${isValid ? 'Valid' : 'Invalid'}
+                            ${verificationStatus}
                         </span>
                     </div>
                     <div class="detail-row">
+                        <span class="detail-label">Certificate Holder:</span>
+                        <span class="detail-value">${extractedData['Certificate Holder Name'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
                         <span class="detail-label">Certificate ID:</span>
-                        <span class="detail-value">${identifier}</span>
+                        <span class="detail-value">${extractedData['Certificate ID'] || 'N/A'}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Verification Date:</span>
@@ -811,29 +848,66 @@
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Issuer:</span>
-                        <span class="detail-value">Government of Jharkhand</span>
+                        <span class="detail-value">${extractedData['University Name'] || 'N/A'}</span>
                     </div>
                     <div class="detail-row">
-                        <span class="detail-label">Verification Hash:</span>
-                        <span class="detail-value">0x${Math.random().toString(16).substr(2, 8)}...</span>
+                        <span class="detail-label">Course:</span>
+                        <span class="detail-value">${extractedData['Course'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Grade:</span>
+                        <span class="detail-value">${extractedData['Grade'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Roll Number:</span>
+                        <span class="detail-value">${extractedData['Roll No'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Blockchain Hash:</span>
+                        <span class="detail-value" style="font-family: monospace; font-size: 0.75em;">${blockchainHash.substring(0, 24)}...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Verification Status:</span>
+                        <span class="detail-value" style="font-weight: 600; color: ${isValid ? 'var(--success-color)' : 'var(--danger-color)'};">${verificationStatus}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Confidence Score:</span>
-                        <span class="detail-value">${Math.floor(Math.random() * 20 + 80)}%</span>
+                        <span class="detail-value">${confidenceScore}</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Analysis Result:</span>
-                        <span class="detail-value">${isValid ? 'Authentic' : 'Suspicious'}</span>
+                        <span class="detail-value">${analysisResult}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">SSIM Score:</span>
+                        <span class="detail-value">${(apiResponse.ssim_score * 100).toFixed(1)}%</span>
                     </div>
                 </div>
             `;
             
             resultCard.innerHTML = resultHTML;
             resultsSection.style.display = 'block';
+
+            let extractedListHTML = '';
+            for (const [key, value] of Object.entries(extractedData)) {
+                extractedListHTML += `
+                    <li>
+                        <strong>${key}:</strong>
+                        <span>${value}</span>
+                    </li>
+                `;
+            }
+
+            extractedTextList.innerHTML = extractedListHTML;
+            
+            heatmapPlaceholder.innerHTML = `
+                <img src="${heatmapUrl}" alt="SSIM Heatmap" onerror="this.parentElement.innerHTML='<i class=\\"fas fa-exclamation-triangle fa-2x\\"></i><p class=\\"mt-2\\">Heatmap could not be loaded</p>'" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            `;
+
+            extractedDataSection.style.display = 'block';
             resultsSection.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(e) {
             const sidebar = document.getElementById('sidebar');
             const toggle = document.querySelector('.mobile-menu-toggle');
