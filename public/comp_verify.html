@@ -322,6 +322,30 @@
         .results-section {
             margin-top: 2rem;
             display: none;
+            /* Container for the new open report button */
+            position: relative; 
+        }
+        
+        /* New button style */
+        .btn-open-report {
+            background: var(--info-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 20px; /* Adjust position */
+            right: 20px; /* Adjust position */
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+        }
+
+        .btn-open-report:hover {
+            background: #138496;
+            transform: translateY(-2px);
         }
 
         .result-card {
@@ -451,6 +475,7 @@
             background: #e9f9e2;
             border: 2px solid var(--accent-color);
             border-radius: 8px;
+            /* Flexbox ensures perfect vertical/horizontal centering */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -458,6 +483,17 @@
             color: #adb5bd;
             font-size: 1rem;
             overflow: hidden;
+        }
+        
+        /* FIX: Ensure heatmap image fits perfectly */
+        .heatmap-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            border-radius: 8px;
+            /* Ensures image itself is centered within the placeholder space */
+            margin: auto; 
+            display: block;
         }
 
         .extracted-text-output {
@@ -495,54 +531,9 @@
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
-                width: 100%;
             }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
             .main-content {
                 margin-left: 0;
-            }
-
-            .header {
-                padding: 1rem;
-            }
-
-            .verify-content {
-                padding: 1rem;
-            }
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            border-radius: 5px;
-            font-size: 1.2rem;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: block;
-            }
-        }
-
-        .fade-in {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
             }
         }
     </style>
@@ -643,6 +634,9 @@
                 </div>
 
                 <div class="results-section" id="resultsSection">
+                    <button class="btn-open-report" id="openReportBtn" onclick="openReport()" style="display: none;">
+                        <i class="fas fa-file-alt me-2"></i>Open Report
+                    </button>
                     <div class="result-card" id="resultCard">
                     </div>
                 </div>
@@ -689,8 +683,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let selectedFile = null;
-        const API_URL = 'http://127.0.0.1:8000'; 
-
+        const API_URL = 'http://127.0.0.1:8000';
+        let currentVerificationResult = null; // Stores the boolean result of the verification
+        
+        // 🚨 IMPORTANT: CONFIGURE YOUR PDF FILE PATHS HERE
+        // You MUST replace these placeholder strings with your actual file paths.
+        const VALID_REPORT_PATH = 'valid_report.pdf'; 
+        const INVALID_REPORT_PATH = 'invalid_report.pdf'; 
+        
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
@@ -744,10 +744,12 @@
         function showLoading() {
             const loadingSpinner = document.getElementById('loadingSpinner');
             const verifyBtn = document.getElementById('verifyBtn');
+            const openReportBtn = document.getElementById('openReportBtn');
             
             loadingSpinner.style.display = 'block';
             verifyBtn.disabled = true;
             verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying...';
+            openReportBtn.style.display = 'none'; // Hide button during verification
         }
 
         function hideLoading() {
@@ -781,16 +783,23 @@
                 const data = await response.json();
                 
                 if (response.ok && data.status === "success") {
+                    currentVerificationResult = data.is_valid; // Store the boolean result
                     showResults(selectedFile.name, data);
                 } else {
+                    // Handle server error or generic failure case
+                    currentVerificationResult = data.is_valid !== undefined ? data.is_valid : false; 
                     alert(`Verification failed: ${data.detail || 'Server error occurred.'}`);
+                    showResults(selectedFile.name, data); // Still show data if possible
                 }
 
             } catch (error) {
                 console.error('Network Error during verification:', error);
+                currentVerificationResult = false; 
                 alert('Could not connect to the FastAPI server. Ensure it is running on port 8000.');
             } finally {
                 hideLoading();
+                // Show the report button regardless of success/failure
+                document.getElementById('openReportBtn').style.display = 'inline-block'; 
             }
         }
 
@@ -900,12 +909,45 @@
 
             extractedTextList.innerHTML = extractedListHTML;
             
-            heatmapPlaceholder.innerHTML = `
-                <img src="${heatmapUrl}" alt="SSIM Heatmap" onerror="this.parentElement.innerHTML='<i class=\\"fas fa-exclamation-triangle fa-2x\\"></i><p class=\\"mt-2\\">Heatmap could not be loaded</p>'" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+            // FIX 1: Clear placeholder content first
+            heatmapPlaceholder.innerHTML = '';
+            
+            // FIX 2: Insert the image tag, using the object-fit CSS rule defined in <style>
+            const imageHtml = `
+                <img src="${heatmapUrl}" alt="SSIM Heatmap" 
+                     onerror="this.parentElement.innerHTML='<i class=\\"fas fa-exclamation-triangle fa-2x\\"></i><p class=\\"mt-2\\">Heatmap could not be loaded</p>'" 
+                     style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
             `;
+            
+            heatmapPlaceholder.innerHTML = imageHtml;
+
 
             extractedDataSection.style.display = 'block';
             resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 💡 UPDATED FUNCTION: Open PDF report conditionally
+        function openReport() {
+            if (currentVerificationResult === null) {
+                alert('Please complete a verification first.');
+                return;
+            }
+
+            let reportPath;
+            
+            if (currentVerificationResult === true) {
+                reportPath = VALID_REPORT_PATH;
+            } else {
+                reportPath = INVALID_REPORT_PATH;
+            }
+
+            // Check if paths are still placeholders
+            if (reportPath === 'valid_report.pdf' || reportPath === 'invalid_report.pdf') {
+                 alert(`Error: Please update the PDF path variables (VALID_REPORT_PATH and INVALID_REPORT_PATH) in the script to the actual names/paths of your PDF files.`);
+                 return;
+            }
+            
+            window.open(reportPath, '_blank');
         }
 
         document.addEventListener('click', function(e) {
