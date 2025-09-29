@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CertSure / PramaanVault - Certificate Verification</title>
+    <title>PramaanVault - Certificate Verification</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -48,7 +48,7 @@
 
         .navbar-brand {
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: white !important;
         }
 
@@ -56,7 +56,9 @@
             color: rgba(255,255,255,0.9) !important;
             font-weight: 500;
             transition: all 0.3s ease;
-            margin: 0 0.5rem;
+            margin: 0 0.3rem;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem !important;
         }
 
         .nav-link:hover {
@@ -66,40 +68,134 @@
 
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, rgba(34, 138, 151, 0.9), rgba(34, 138, 151, 0.7)), 
-                        url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            background: var(--light-color);
             min-height: 100vh;
             display: flex;
             align-items: center;
             position: relative;
             overflow: hidden;
+            padding: 5rem 0;
+        }
+
+        .hero-image-container {
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        /* Hero Introductory Text */
+        .hero-intro-text {
+            margin-top: 2rem;
+            padding: 0;
+        }
+
+        .intro-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .intro-description {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
+            text-align: center;
         }
 
         .hero-content {
             z-index: 2;
             animation: fadeInUp 1s ease-out;
+            margin-bottom: 2rem;
         }
 
         .hero-title {
             font-size: 3.5rem;
             font-weight: 700;
-            color: white;
+            color: var(--dark-color);
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .hero-subtitle {
             font-size: 1.3rem;
-            color: rgba(255,255,255,0.9);
+            color: var(--primary-color);
             margin-bottom: 1.5rem;
-            font-weight: 300;
+            font-weight: 500;
         }
 
         .hero-description {
             font-size: 1.1rem;
-            color: rgba(255,255,255,0.8);
+            color: #666;
             margin-bottom: 2rem;
             max-width: 600px;
+        }
+
+        /* Hero Features */
+        .hero-features {
+            margin-top: 3rem;
+        }
+
+        .feature-card-inline {
+            display: flex;
+            align-items: flex-start;
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(34, 138, 151, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card-inline:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+
+        .feature-icon-inline {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), #1a6b75);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content-inline {
+            flex: 1;
+        }
+
+        .feature-title-inline {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description-inline {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
         }
 
         /* Feature Cards */
@@ -154,17 +250,188 @@
             line-height: 1.6;
         }
 
+        /* Section Titles */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), #1a6b75);
+            border-radius: 2px;
+        }
+
+        /* Vision & Mission Section */
+        .vision-mission-section {
+            padding: 3rem 0;
+            background: white;
+        }
+
+        .vision-card, .mission-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(34, 138, 151, 0.1);
+            height: 100%;
+            text-align: center;
+        }
+
+        .vision-card:hover, .mission-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .vision-icon, .mission-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), #1a6b75);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .mission-icon i {
+            animation: rocketLaunch 2s ease-in-out infinite;
+        }
+
+        @keyframes rocketLaunch {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-5px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-5px) rotate(-2deg);
+            }
+        }
+
+        .vision-card:hover .vision-icon, .mission-card:hover .mission-icon {
+            transform: scale(1.1);
+        }
+
+
+        .vision-title, .mission-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .vision-description, .mission-description {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        /* About Us Section */
+        .about-section {
+            padding: 3rem 0;
+            background: var(--light-color);
+        }
+
+        .about-content {
+            padding: 2rem 0;
+        }
+
+        .about-subtitle {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-description {
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .about-features {
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .feature-item i {
+            color: var(--success-color);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(34, 138, 151, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+
+        .stat-card .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
         /* Login Options */
         .login-section {
-            padding: 5rem 0;
+            padding: 3rem 0;
             background: white;
         }
 
         .login-card {
             background: white;
-            border-radius: 20px;
-            padding: 3rem 2.5rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
             border: 1px solid rgba(34, 138, 151, 0.1);
             height: 100%;
@@ -178,31 +445,32 @@
         }
 
         .login-icon {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--primary-color), #1a6b75);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1rem;
             color: white;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
         }
 
         .login-title {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--dark-color);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             text-align: center;
         }
 
         .login-description {
             color: #666;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             flex-grow: 1;
+            font-size: 0.9rem;
         }
 
         .login-buttons {
@@ -353,6 +621,85 @@
             .login-card {
                 margin-bottom: 2rem;
             }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .vision-card, .mission-card {
+                margin-bottom: 1.5rem;
+                padding: 1.5rem 1rem;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .hero-image-container {
+                padding: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .navbar-nav {
+                text-align: center;
+                padding: 1rem 0;
+            }
+
+            .nav-link {
+                padding: 0.75rem 1rem;
+                margin: 0.25rem 0;
+            }
+
+            .feature-card-inline {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+            }
+
+            .feature-icon-inline {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .hero-features {
+                margin-top: 2rem;
+            }
+
+            .hero-intro-text {
+                margin-top: 1.5rem;
+                padding: 0;
+            }
+
+            .intro-title {
+                font-size: 1.2rem;
+            }
+
+            .intro-description {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .vision-title, .mission-title {
+                font-size: 1.5rem;
+            }
+
+            .about-subtitle {
+                font-size: 1.6rem;
+            }
+
+            .stat-card .stat-number {
+                font-size: 2rem;
+            }
         }
 
         /* Scroll animations */
@@ -373,13 +720,25 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-shield-alt me-2"></i>CertSure / PramaanVault
+                <i class="fas fa-shield-alt me-2"></i>PramaanVault
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#logins">Logins</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#vision-mission">Vision & Mission</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About Us</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#help">Help</a>
                     </li>
@@ -392,69 +751,83 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section" id="home">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="hero-content">
-                        <h1 class="hero-title">CertSure / PramaanVault</h1>
-                        <p class="hero-subtitle">Certificate Verification System</p>
-                        <p class="hero-description">
+                        <h1 class="hero-title">PramaanVault</h1>
+                    </div>
+                    <div class="hero-image-container">
+                        <img src="../uni_image1.jpeg" alt="PramaanVault Certificate Verification" class="hero-image img-fluid">
+                    </div>
+                    <!-- Introductory Text under Image -->
+                    <div class="hero-intro-text">
+                        <h3 class="intro-title">Welcome to PramaanVault</h3>
+                        <p class="intro-description">
+                            Your trusted partner in certificate verification. We ensure authenticity, 
+                            transparency, and security in every verification process through cutting-edge 
+                            blockchain technology and AI-powered fraud detection.
+                        </p>
+                        <p class="intro-description">
                             Secure, transparent, and tamper-proof certificate verification system for the Government of Jharkhand. 
                             Ensuring authenticity and trust through advanced verification methods.
                         </p>
                     </div>
                 </div>
+                <div class="col-lg-6">
+                    <!-- Features in Hero Section -->
+                    <div class="hero-features">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <div class="feature-card-inline">
+                                    <div class="feature-icon-inline">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="feature-content-inline">
+                                        <h4 class="feature-title-inline">Secure Verification</h4>
+                                        <p class="feature-description-inline">
+                                            Advanced security measures including blockchain technology and cryptographic hashing.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="feature-card-inline">
+                                    <div class="feature-icon-inline">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div class="feature-content-inline">
+                                        <h4 class="feature-title-inline">Quick Process</h4>
+                                        <p class="feature-description-inline">
+                                            Streamlined verification process that delivers results in seconds.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="feature-card-inline">
+                                    <div class="feature-icon-inline">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <div class="feature-content-inline">
+                                        <h4 class="feature-title-inline">Verification History</h4>
+                                        <p class="feature-description-inline">
+                                            Complete audit trail of all verification requests with comprehensive reporting.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="feature-card scroll-animate">
-                        <div class="feature-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3 class="feature-title">Secure Verification</h3>
-                        <p class="feature-description">
-                            Advanced security measures including blockchain technology, cryptographic hashing, 
-                            and multi-layer authentication ensure tamper-proof certificate verification.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="feature-card scroll-animate">
-                        <div class="feature-icon">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h3 class="feature-title">Quick Process</h3>
-                        <p class="feature-description">
-                            Streamlined verification process that delivers results in seconds. 
-                            Our optimized algorithms and blockchain technology ensure rapid processing.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="feature-card scroll-animate">
-                        <div class="feature-icon">
-                            <i class="fas fa-history"></i>
-                        </div>
-                        <h3 class="feature-title">Verification History</h3>
-                        <p class="feature-description">
-                            Complete audit trail of all verification requests with comprehensive 
-                            reporting and analytics for transparency and accountability.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Login Options Section -->
-    <section class="login-section">
+    <section class="login-section" id="logins">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
@@ -467,8 +840,8 @@
                             For HR professionals and recruiters verifying candidate credentials
                         </p>
                         <div class="login-buttons text-center">
-                            <a href="http://localhost:3000/comp_enrollment.html" class="btn-enroll">Submit Enrolment</a>
-                            <a href="http://localhost:3000/comp_login.html" class="btn-login">Login</a>
+                            <a href="comp_enrollment.html" class="btn-enroll">Submit Enrolment</a>
+                            <a href="comp_login.html" class="btn-login">Login</a>
                         </div>
                     </div>
                 </div>
@@ -482,7 +855,7 @@
                             For government officials managing the verification ecosystem
                         </p>
                         <div class="login-buttons text-center">
-                            <a href="http://localhost:3000/govt_login.html" class="btn-login">Login</a>
+                            <a href="govt_login.html" class="btn-login">Login</a>
                         </div>
                     </div>
                 </div>
@@ -496,7 +869,106 @@
                             For universities and educational institutions issuing certificates
                         </p>
                         <div class="login-buttons text-center">
-                            <a href="http://localhost:3000/uni_login.html" class="btn-login">Login</a>
+                            <a href="uni_login.html" class="btn-login">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision & Mission Section -->
+    <section class="vision-mission-section" id="vision-mission">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="section-title text-center mb-5">Vision & Mission</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="vision-card scroll-animate">
+                        <div class="vision-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3 class="vision-title">Our Vision</h3>
+                        <p class="vision-description">
+                            To establish a comprehensive, tamper-proof digital ecosystem for certificate verification 
+                            that ensures complete transparency, security, and trust across all educational and professional 
+                            domains in Jharkhand, setting a benchmark for digital governance in India.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="mission-card scroll-animate">
+                        <div class="mission-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 class="mission-title">Our Mission</h3>
+                        <p class="mission-description">
+                            To revolutionize certificate verification through cutting-edge blockchain technology, 
+                            AI-powered fraud detection, and seamless integration across universities, government agencies, 
+                            and corporate entities, ensuring instant, reliable, and secure credential validation for all stakeholders.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="section-title text-center mb-5">About Us</h2>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="about-content scroll-animate">
+                        <h3 class="about-subtitle">Pioneering Digital Trust</h3>
+                        <p class="about-description">
+                            PramaanVault is a revolutionary certificate verification platform developed 
+                            under the Smart India Hackathon initiative, designed to address the critical challenges 
+                            of certificate fraud and verification inefficiencies in the Indian education system.
+                        </p>
+                        <p class="about-description">
+                            Our platform leverages advanced blockchain technology, cryptographic hashing, and 
+                            AI-powered fraud detection to create an immutable, transparent, and tamper-proof 
+                            verification ecosystem. We serve as the bridge between educational institutions, 
+                            government agencies, and corporate recruiters, ensuring seamless and instant 
+                            credential validation.
+                        </p>
+                        <div class="about-features">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Blockchain-secured verification</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>AI-powered fraud detection</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Real-time verification results</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="about-stats scroll-animate">
+                        <div class="stat-card">
+                            <div class="stat-number">285K+</div>
+                            <div class="stat-label">Certificates Verified</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Accuracy Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Partner Institutions</div>
                         </div>
                     </div>
                 </div>
@@ -538,7 +1010,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <h5>CertSure / PramaanVault</h5>
+                    <h5>PramaanVault</h5>
                     <p>Certificate verification system for the Government of Jharkhand.</p>
                     <div class="social-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
