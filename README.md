@@ -39,9 +39,10 @@ A comprehensive report is generated, providing a clear verdict and the evidence 
 
 
 
--<img width="1195" height="847" alt="asd" src="https://github.com/user-attachments/assets/8c8c07ac-f5e2-4771-bcaa-c56da720d63" /><img width="400"  alt="image" src="https://github.com/user-attachments/assets/7c293b44-eae6-41e4-8b0e-b801b8b07db6" />
+-<img width="1195" height="847" alt="asd" src="https://github.com/user-attachments/assets/58a6a772-1aa1-4b94-8b5d-6ec497c71825" />  <img width="400"  alt="image" src="https://github.com/user-attachments/assets/7c293b44-eae6-41e4-8b0e-b801b8b07db6" />
 
-- <img width="1195" height="847" alt="asd" src="https://github.com/user-attachments/assets/58a6a772-1aa1-4b94-8b5d-6ec497c71825" />
+<img width="400" src="https://github.com/user-attachments/assets/729ce057-cef8-4a07-950f-f710fbce84f2" />
+
 
 
 ## 🛠️ Tech Stack
