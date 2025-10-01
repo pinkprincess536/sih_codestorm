@@ -36,9 +36,8 @@ A comprehensive report is generated, providing a clear verdict and the evidence 
 - **🔐 Secure & Scalable Backend:** A robust backend to handle file processing, AI model interactions, and blockchain communications.
 - - **📄 Instant Verification Reports:** Generates detailed, downloadable PDF reports for both valid and invalid certificates, providing evidence for the verification decision.
 
-- [Invalid..pdf](https://github.com/user-attachments/files/22643033/Invalid.pdf)
-- [valid.pdf](https://github.com/user-attachments/files/22643048/valid.pdf)
--<img width="1485" height="1090" alt="image" src="https://github.com/user-attachments/assets/2bf19fbf-cdb4-4db7-bd90-49080c4918ca" />
+
+-<img width="1000"  alt="image" src="https://github.com/user-attachments/assets/2bf19fbf-cdb4-4db7-bd90-49080c4918ca" />
 -<img width="2000" height="1414" alt="heatmap_20250929_093403" src="https://github.com/user-attachments/assets/409cca5b-a660-4eae-82f1-16ce14a0964c" />
 
 
