@@ -32,9 +32,16 @@ A comprehensive report is generated, providing a clear verdict and the evidence 
 - **🤖 AI-Powered OCR:** Automatically extracts text details like Student Name, Roll Number, and Grades from any certificate format (PDF, JPG, PNG).
 - **🎨 SSIM Heatmap Analysis:** Generates a visual heatmap to pinpoint exact areas of forgery or tampering by comparing the document's structure to a verified template.
 - **🔗 Blockchain Immutability:** Certificate details (as a hash) are recorded on a Ganache-powered private blockchain, ensuring a tamper-proof "single source of truth."
-- **📄 Instant Verification Reports:** Generates detailed, downloadable PDF reports for both valid and invalid certificates, providing evidence for the verification decision.
 - **💻 Intuitive User Interface:** A clean and modern UI for seamless interaction by University Admins and Recruiters.
 - **🔐 Secure & Scalable Backend:** A robust backend to handle file processing, AI model interactions, and blockchain communications.
+- - **📄 Instant Verification Reports:** Generates detailed, downloadable PDF reports for both valid and invalid certificates, providing evidence for the verification decision.
+
+- [Invalid..pdf](https://github.com/user-attachments/files/22643033/Invalid.pdf)
+- [valid.pdf](https://github.com/user-attachments/files/22643048/valid.pdf)
+-<img width="1485" height="1090" alt="image" src="https://github.com/user-attachments/assets/2bf19fbf-cdb4-4db7-bd90-49080c4918ca" />
+-<img width="2000" height="1414" alt="heatmap_20250929_093403" src="https://github.com/user-attachments/assets/409cca5b-a660-4eae-82f1-16ce14a0964c" />
+
+
 
 ## 🛠️ Tech Stack
 
@@ -42,7 +49,7 @@ A comprehensive report is generated, providing a clear verdict and the evidence 
 - [CSS, React.js, Tailwind CSS]
 
 **Backend:**
-- [ Node.js, Express.js]
+- [ Express.js,FastAPI]
 
 **Machine Learning:**
 - [ Python,FastAPI, EasyOCR, Scikit-image (for SSIM)]
